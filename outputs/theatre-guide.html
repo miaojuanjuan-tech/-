@@ -229,6 +229,13 @@
       font-size: 13px;
     }
 
+    .venue-links {
+      display: grid;
+      gap: 8px;
+    }
+
+    .city-resource-button { width: 100%; }
+
     .fresh-list {
       display: grid;
       gap: 9px;
@@ -531,7 +538,7 @@
         <div class="count" id="count"></div>
       </div>
 
-      <section class="live-panel">
+      <section class="live-panel" id="liveRadar">
         <h3>找真实正在演出的项目</h3>
         <p class="subtitle">先选城市、偏好和具体剧名，再通过下方入口核验售票状态。平台页面显示的日期、城市、票价和余票才是最终依据。</p>
         <div class="live-tools">
@@ -579,27 +586,45 @@
 
       <section class="live-panel">
         <h3>音乐剧追踪资源</h3>
-        <p class="subtitle">适合继续发现音乐剧、核对剧院排期和了解卡司。票务平台检索具体项目时，建议只输入剧名。</p>
+        <p class="subtitle">按城市选择后，上方实时演出雷达会同步切换地点；剧院链接可直接查看官方排期或猫眼场馆结果。</p>
         <div class="source-grid">
           <article class="source-card">
-            <h4>北京天桥艺术中心</h4>
-            <p>北京音乐剧重点场馆，可查看官方演出日历与开票信息。</p>
-            <a href="https://www.tartscenter.com/" target="_blank" rel="noreferrer">查看官网</a>
+            <h4>北京</h4>
+            <p>大型音乐剧和舞台作品最集中的城市之一。</p>
+            <div class="venue-links">
+              <a href="https://www.tqpac.com/list" target="_blank" rel="noreferrer">天桥艺术中心</a>
+              <a href="https://www.chncpa.org/ycgp_220/" target="_blank" rel="noreferrer">国家大剧院</a>
+              <a href="https://www.polytheatre.com/" target="_blank" rel="noreferrer">北京保利剧院</a>
+            </div>
+            <button class="btn city-resource-button" data-city="北京">选择北京</button>
           </article>
           <article class="source-card">
-            <h4>国家大剧院</h4>
-            <p>用于核验国家大剧院和北京艺术中心的官方演出排期。</p>
-            <a href="https://www.chncpa.org/ycgp_220/" target="_blank" rel="noreferrer">查看演出</a>
+            <h4>天津</h4>
+            <p>重点查看大型巡演、国创作品和京津联动场次。</p>
+            <div class="venue-links">
+              <a href="https://www.maoyan.com/query?kw=%E5%A4%A9%E6%B4%A5%E5%A4%A7%E5%89%A7%E9%99%A2" target="_blank" rel="noreferrer">天津大剧院</a>
+              <a href="https://www.maoyan.com/query?kw=%E6%B4%A5%E6%B9%BE%E5%A4%A7%E5%89%A7%E9%99%A2" target="_blank" rel="noreferrer">津湾大剧院</a>
+              <a href="https://www.maoyan.com/query?kw=%E5%A4%A9%E6%B4%A5%E4%BF%9D%E5%88%A9%E5%89%A7%E9%99%A2" target="_blank" rel="noreferrer">天津保利剧院</a>
+            </div>
+            <button class="btn city-resource-button" data-city="天津">选择天津</button>
           </article>
           <article class="source-card">
-            <h4>猫眼演出</h4>
-            <p>补充查看音乐剧巡演、开票状态和城市站点信息。</p>
-            <a href="https://show.maoyan.com/" target="_blank" rel="noreferrer">打开猫眼</a>
+            <h4>长沙</h4>
+            <p>适合跟踪华中巡演、热门原版音乐剧和国创项目。</p>
+            <div class="venue-links">
+              <a href="https://www.maoyan.com/query?kw=%E6%A2%85%E6%BA%AA%E6%B9%96%E5%9B%BD%E9%99%85%E6%96%87%E5%8C%96%E8%89%BA%E6%9C%AF%E4%B8%AD%E5%BF%83%E5%A4%A7%E5%89%A7%E9%99%A2" target="_blank" rel="noreferrer">梅溪湖大剧院</a>
+              <a href="https://www.maoyan.com/query?kw=%E6%B9%96%E5%8D%97%E5%A4%A7%E5%89%A7%E9%99%A2" target="_blank" rel="noreferrer">湖南大剧院</a>
+              <a href="https://www.maoyan.com/query?kw=%E9%95%BF%E6%B2%99%E9%9F%B3%E4%B9%90%E5%8E%85" target="_blank" rel="noreferrer">长沙音乐厅</a>
+            </div>
+            <button class="btn city-resource-button" data-city="长沙">选择长沙</button>
           </article>
           <article class="source-card">
-            <h4>音乐剧日历</h4>
-            <p>按城市和剧院浏览音乐剧排期，发现剧名后再回官方渠道核验。</p>
-            <a href="https://y.saoju.net/yyj/" target="_blank" rel="noreferrer">查看日历</a>
+            <h4>跨城市补充</h4>
+            <p>需要比较其他城市时，可继续使用猫眼演出和音乐剧日历。</p>
+            <div class="venue-links">
+              <a href="https://show.maoyan.com/" target="_blank" rel="noreferrer">猫眼演出</a>
+              <a href="https://y.saoju.net/yyj/" target="_blank" rel="noreferrer">音乐剧日历</a>
+            </div>
           </article>
         </div>
       </section>
@@ -1302,6 +1327,17 @@
     function init() {
       refreshCityOptions();
       $("liveCity").insertAdjacentHTML("beforeend", liveCityGroups.map((city) => `<option value="${city}">${city}</option>`).join(""));
+      document.querySelectorAll(".city-resource-button").forEach((button) => {
+        button.addEventListener("click", () => {
+          const city = button.dataset.city;
+          $("liveCity").value = city;
+          $("city").value = city;
+          state.city = city;
+          renderLive();
+          render();
+          $("liveRadar").scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
       ["q", "type", "style", "city"].forEach((id) => {
         $(id).addEventListener("input", (event) => {
           state[id] = event.target.value;
