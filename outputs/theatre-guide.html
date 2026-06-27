@@ -280,7 +280,7 @@
 
     .region-split {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       gap: 14px;
       margin-top: 16px;
     }
@@ -526,7 +526,7 @@
       <div class="section-title">
         <div>
           <h2>实时演出雷达</h2>
-          <p class="subtitle">优先查票务平台和剧院官网；下面的灵感库只做偏好参考。</p>
+          <p class="subtitle">优先通过大麦和猫眼按剧名直搜；下面的灵感库只做偏好参考。</p>
         </div>
         <div class="count" id="count"></div>
       </div>
@@ -566,9 +566,8 @@
       </section>
 
       <section class="live-panel">
-        <h3>京津地区专区</h3>
-        <p class="subtitle">左侧入口用来发现北京、天津的新排期；右侧清单是已经收录的京津候选，点击“大麦直搜”后再核验场次。</p>
-        <div class="source-grid" id="regionDiscovery"></div>
+        <h3>北京、天津、长沙专区</h3>
+        <p class="subtitle">这里汇总已经收录的三个重点地区候选；点击“大麦直搜”会直接按剧名打开平台结果，再核验具体场次。</p>
         <div class="region-split" id="regionBoard"></div>
       </section>
 
@@ -1017,16 +1016,6 @@
         name: "猫眼演出",
         note: "适合交叉核验音乐剧、舞剧、剧场演出是否仍在售。",
         url: (q) => `https://www.maoyan.com/query?kw=${encodeURIComponent(q)}`
-      },
-      {
-        name: "票星球",
-        note: "有些剧场项目会在这里售票，可作为补充来源。",
-        url: (q) => `https://www.baidu.com/s?wd=${encodeURIComponent(q + " 票星球 演出")}`
-      },
-      {
-        name: "剧院官网",
-        note: "最适合核验排期变更、卡司、退改规则和加场信息。",
-        url: (q) => `https://www.baidu.com/s?wd=${encodeURIComponent(q + " 剧院 官网 演出日程")}`
       }
     ];
 
@@ -1099,41 +1088,12 @@
       const q = encodeURIComponent(searchName(show));
       return {
         damai: `https://search.damai.cn/search.html?keyword=${q}`,
-        maoyan: `https://www.maoyan.com/query?kw=${q}`,
-        web: `https://www.baidu.com/s?wd=${q}%20官方%20演出%20排期`
+        maoyan: `https://www.maoyan.com/query?kw=${q}`
       };
     }
 
-    function regionDiscoveryLinks() {
-      const regions = [
-        {
-          city: "北京",
-          queries: [
-            "北京 舞剧 音乐剧 2026 本月 正在售票",
-            "北京 天桥艺术中心 音乐剧 舞剧 演出日程",
-            "北京 国家大剧院 舞剧 音乐剧 演出日程"
-          ]
-        },
-        {
-          city: "天津",
-          queries: [
-            "天津 舞剧 音乐剧 2026 本月 正在售票",
-            "天津大剧院 音乐剧 舞剧 演出日程",
-            "天津 保利剧院 舞剧 音乐剧 演出"
-          ]
-        }
-      ];
-      $("regionDiscovery").innerHTML = regions.map((region) => `
-        <article class="source-card">
-          <h4>${region.city}发现入口</h4>
-          <p>${region.queries[0]}<br>用于发现新剧名，找到剧名后自动任务会合并进下方剧目库。</p>
-          <a href="https://www.baidu.com/s?wd=${encodeURIComponent(region.queries.join(" "))}" target="_blank" rel="noreferrer">网页核验</a>
-        </article>
-      `).join("");
-    }
-
     function renderRegionBoard() {
-      const regions = ["北京", "天津"];
+      const regions = ["北京", "天津", "长沙"];
       $("regionBoard").innerHTML = regions.map((city) => {
         const list = allShows().filter((show) => show.cities.includes(city)).slice(0, 12);
         const rows = list.length ? list.map((show) => {
@@ -1195,16 +1155,6 @@
       const city = $("liveCity").value;
       const windowText = $("liveWindow").value;
       const cityPart = city === "全国" ? "全国" : city;
-      const discoveryQuery = `${cityPart} ${$("liveTaste").value} ${windowText} 2026 正在售票 剧院演出日程`;
-      const discovery = `
-        <div class="fresh-item">
-          <div>
-            <strong>发现新剧目</strong>
-            <span>${discoveryQuery}<br>用这一条综合搜索发现线索；找到具体剧名后，再通过剧院官网或票务平台核验。</span>
-          </div>
-          <a href="https://www.baidu.com/s?wd=${encodeURIComponent(discoveryQuery)}" target="_blank" rel="noreferrer">网页核验</a>
-        </div>
-      `;
       const known = liveCandidates().slice(0, 8).map((show) => {
         const name = searchName(show);
         const href = `https://search.damai.cn/search.html?keyword=${encodeURIComponent(name)}`;
@@ -1218,7 +1168,7 @@
           </div>
         `;
       });
-      $("freshList").innerHTML = [discovery, ...known].join("");
+      $("freshList").innerHTML = known.join("");
     }
 
     function allCities() {
@@ -1276,7 +1226,7 @@
               <button onclick="openDetail('${show.title.replace(/'/g, "\\'")}')">详情</button>
               <button onclick="toggleFav('${show.title.replace(/'/g, "\\'")}')">${isFav(show.title) ? "已收藏" : "收藏"}</button>
               <a href="${links.damai}" target="_blank" rel="noreferrer">大麦检索</a>
-              <a href="${links.web}" target="_blank" rel="noreferrer">官方检索</a>
+              <a href="${links.maoyan}" target="_blank" rel="noreferrer">猫眼检索</a>
             </div>
           </div>
         </article>
@@ -1316,7 +1266,6 @@
           <div class="card-actions">
             <a href="${links.damai}" target="_blank" rel="noreferrer">大麦</a>
             <a href="${links.maoyan}" target="_blank" rel="noreferrer">猫眼</a>
-            <a href="${links.web}" target="_blank" rel="noreferrer">官方网页</a>
             <button onclick="toggleFav('${show.title.replace(/'/g, "\\'")}')">${isFav(show.title) ? "取消收藏" : "收藏"}</button>
           </div>
         </div>
@@ -1342,7 +1291,6 @@
       const list = allShows().filter(matches);
       renderStats(list);
       grid.innerHTML = list.length ? list.map(card).join("") : `<div class="empty">没有匹配结果。换个城市、风格或关键词试试。</div>`;
-      regionDiscoveryLinks();
       renderRegionBoard();
       const auto = autoDiscoveredData();
       const autoCount = Array.isArray(auto.items) ? auto.items.length : 0;
