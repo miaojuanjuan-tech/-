@@ -1,5 +1,7 @@
 name: Publish theatre guide
 
+# Publish the static site whenever its content or this workflow changes.
+
 on:
   push:
     branches:
