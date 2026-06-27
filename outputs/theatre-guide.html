@@ -1,0 +1,1451 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>全国舞剧与音乐剧情报板</title>
+  <style>
+    :root {
+      --ink: #202124;
+      --muted: #62666d;
+      --paper: #fbfaf7;
+      --panel: #ffffff;
+      --line: #ded8ce;
+      --red: #9e2f2f;
+      --teal: #1f6f78;
+      --gold: #a67c2d;
+      --green: #4f744a;
+      --shadow: 0 16px 42px rgba(32, 33, 36, .10);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", "PingFang SC", system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(158, 47, 47, .10), transparent 26rem),
+        radial-gradient(circle at 88% 4%, rgba(31, 111, 120, .12), transparent 24rem),
+        var(--paper);
+    }
+
+    button, input, select, textarea { font: inherit; }
+
+    .app-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+    }
+
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 24px;
+      border-right: 1px solid var(--line);
+      background: rgba(251, 250, 247, .86);
+      backdrop-filter: blur(14px);
+      overflow-y: auto;
+    }
+
+    main { padding: 28px; }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .mark {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: conic-gradient(from 140deg, var(--red), var(--gold), var(--teal), var(--red));
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      font-weight: 800;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: 22px; line-height: 1.2; }
+    .subtitle { color: var(--muted); font-size: 13px; margin-top: 4px; }
+
+    .stage-visual {
+      min-height: 170px;
+      margin: 0 0 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(32,33,36,.18), rgba(32,33,36,.03)),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 420'%3E%3Crect width='900' height='420' fill='%23202124'/%3E%3Cpath d='M0 0h900v118c-118 42-242 60-372 54C318 163 173 93 0 120z' fill='%239e2f2f' opacity='.72'/%3E%3Cpath d='M900 0v132c-135 20-264 53-386 98C352 288 198 300 0 255V128c164 41 309 51 435 30C604 128 752 69 900 0z' fill='%231f6f78' opacity='.82'/%3E%3Cpath d='M0 314c150-30 297-23 442 22 158 48 310 48 458 0v84H0z' fill='%23a67c2d' opacity='.9'/%3E%3Ccircle cx='180' cy='190' r='54' fill='%23fbfaf7' opacity='.14'/%3E%3Ccircle cx='705' cy='186' r='70' fill='%23fbfaf7' opacity='.12'/%3E%3Cpath d='M360 88c39 56 71 112 97 169 26-69 61-126 105-172' fill='none' stroke='%23fbfaf7' stroke-width='14' stroke-linecap='round' opacity='.55'/%3E%3Cpath d='M304 292c97-34 205-34 317 0' fill='none' stroke='%23fbfaf7' stroke-width='9' stroke-linecap='round' opacity='.62'/%3E%3C/svg%3E");
+      background-size: cover;
+      background-position: center;
+    }
+
+    .controls {
+      display: grid;
+      gap: 12px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 11px;
+      color: var(--ink);
+      background: var(--panel);
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(31, 111, 120, .14);
+    }
+
+    .filter-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: var(--panel);
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .btn.primary {
+      border-color: transparent;
+      color: white;
+      background: var(--teal);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .section-title h2 { font-size: 28px; }
+    .count { color: var(--muted); font-size: 14px; }
+
+    .quick-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(130px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: rgba(255,255,255,.72);
+    }
+
+    .stat strong { display: block; font-size: 22px; }
+    .stat span { color: var(--muted); font-size: 12px; }
+
+    .live-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      margin-bottom: 22px;
+      background: rgba(255,255,255,.84);
+      box-shadow: 0 10px 28px rgba(32, 33, 36, .06);
+    }
+
+    .live-panel h3 {
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+
+    .live-tools {
+      display: grid;
+      grid-template-columns: .8fr .9fr 1.1fr .8fr auto;
+      gap: 10px;
+      align-items: end;
+      margin-top: 14px;
+    }
+
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .source-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: #fff;
+      display: grid;
+      gap: 10px;
+    }
+
+    .source-card h4 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .source-card p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .source-card a {
+      min-height: 36px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: var(--teal);
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .fresh-list {
+      display: grid;
+      gap: 9px;
+      margin-top: 14px;
+    }
+
+    .fresh-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .fresh-item strong {
+      display: block;
+      font-size: 15px;
+    }
+
+    .fresh-item span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .fresh-item a {
+      white-space: nowrap;
+      color: var(--teal);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .library-tools {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      margin-bottom: 20px;
+      background: rgba(255,255,255,.78);
+    }
+
+    .library-tools h3 {
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+
+    .add-grid {
+      display: grid;
+      grid-template-columns: 1.2fr .7fr .8fr 1fr auto;
+      gap: 10px;
+      align-items: end;
+      margin-top: 14px;
+    }
+
+    .small-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .region-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .region-column {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: #fff;
+    }
+
+    .region-column h4 {
+      margin: 0 0 10px;
+      font-size: 17px;
+    }
+
+    .region-show {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 0;
+      border-top: 1px solid #eee9df;
+    }
+
+    .region-show:first-of-type { border-top: 0; }
+
+    .region-show strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .region-show span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .region-show a {
+      color: var(--teal);
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255,255,255,.88);
+      box-shadow: 0 10px 26px rgba(32, 33, 36, .06);
+      overflow: hidden;
+    }
+
+    .card-media {
+      height: 84px;
+      display: flex;
+      align-items: end;
+      padding: 12px;
+      color: white;
+      background:
+        linear-gradient(115deg, rgba(32,33,36,.7), rgba(32,33,36,.18)),
+        var(--tone, var(--red));
+    }
+
+    .card-media.dance { --tone: linear-gradient(135deg, #8b2d34, #1f6f78); }
+    .card-media.musical { --tone: linear-gradient(135deg, #2f5f55, #a67c2d); }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: rgba(255,255,255,.20);
+      border: 1px solid rgba(255,255,255,.35);
+    }
+
+    .card-body { padding: 16px; display: grid; gap: 12px; }
+    .card h3 { font-size: 19px; line-height: 1.25; }
+    .meta { color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .desc { font-size: 14px; line-height: 1.7; }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .tag {
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: #f0ece4;
+      color: #514b42;
+      font-size: 12px;
+    }
+
+    .tag.auto {
+      background: #e5f1f2;
+      color: var(--teal);
+      font-weight: 700;
+    }
+
+    .card-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+    }
+
+    .card-actions a, .card-actions button {
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      text-decoration: none;
+      color: var(--ink);
+      background: #fff;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .drawer {
+      position: fixed;
+      inset: 0 0 0 auto;
+      width: min(520px, 100vw);
+      padding: 24px;
+      background: var(--panel);
+      border-left: 1px solid var(--line);
+      box-shadow: -20px 0 55px rgba(32, 33, 36, .16);
+      transform: translateX(105%);
+      transition: transform .22s ease;
+      z-index: 10;
+      overflow-y: auto;
+    }
+
+    .drawer.open { transform: translateX(0); }
+    .drawer-head { display: flex; justify-content: space-between; gap: 16px; align-items: start; margin-bottom: 18px; }
+    .drawer h2 { font-size: 24px; }
+    .drawer-section { border-top: 1px solid var(--line); padding: 16px 0; display: grid; gap: 8px; }
+    .drawer-section h3 { font-size: 14px; color: var(--muted); }
+    .drawer-section p, .drawer-section li { line-height: 1.7; font-size: 14px; }
+
+    .empty {
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      padding: 30px;
+      text-align: center;
+      color: var(--muted);
+      background: rgba(255,255,255,.58);
+    }
+
+    footer {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 880px) {
+      .app-shell { grid-template-columns: 1fr; }
+      aside {
+        position: static;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      main { padding: 22px; }
+      .quick-stats { grid-template-columns: repeat(2, 1fr); }
+      .live-tools { grid-template-columns: 1fr 1fr; }
+      .add-grid { grid-template-columns: 1fr 1fr; }
+      .region-split { grid-template-columns: 1fr; }
+      .section-title { align-items: start; flex-direction: column; }
+    }
+
+    @media (max-width: 520px) {
+      aside, main { padding: 16px; }
+      .filter-row, .card-actions { grid-template-columns: 1fr; }
+      .live-tools, .fresh-item { grid-template-columns: 1fr; }
+      .add-grid { grid-template-columns: 1fr; }
+      .region-show { grid-template-columns: 1fr; }
+      .quick-stats { grid-template-columns: 1fr; }
+      .section-title h2 { font-size: 23px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside>
+      <div class="brand">
+        <div class="mark">剧</div>
+        <div>
+          <h1>全国舞剧与音乐剧情报板</h1>
+          <p class="subtitle">古风舞剧优先，经典音乐剧精选</p>
+        </div>
+      </div>
+      <div class="stage-visual" aria-hidden="true"></div>
+      <div class="controls">
+        <label>关键词
+          <input id="q" type="search" placeholder="剧名、城市、风格、关键词">
+        </label>
+        <div class="filter-row">
+          <label>类型
+            <select id="type">
+              <option value="">全部</option>
+              <option value="舞剧">舞剧</option>
+              <option value="音乐剧">音乐剧</option>
+            </select>
+          </label>
+          <label>偏好
+            <select id="style">
+              <option value="">全部</option>
+              <option value="古风">古风</option>
+              <option value="经典">经典</option>
+              <option value="红色">红色</option>
+              <option value="海外">海外</option>
+              <option value="国创">国创</option>
+            </select>
+          </label>
+        </div>
+        <label>城市/地区
+          <select id="city">
+            <option value="">全国</option>
+          </select>
+        </label>
+        <label>我的观演备注
+          <textarea id="note" rows="4" placeholder="例如：优先看南京/上海站，预算 680 以下，想带朋友一起看。"></textarea>
+        </label>
+        <div class="actions">
+          <button class="btn primary" id="showFavs">只看收藏</button>
+          <button class="btn" id="reset">重置</button>
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      <div class="section-title">
+        <div>
+          <h2>实时演出雷达</h2>
+          <p class="subtitle">优先查票务平台和剧院官网；下面的灵感库只做偏好参考。</p>
+        </div>
+        <div class="count" id="count"></div>
+      </div>
+
+      <section class="live-panel">
+        <h3>找真实正在演出的项目</h3>
+        <p class="subtitle">本地网页不能稳定读取大麦/猫眼的动态库存，所以这里生成实时检索入口。打开后以平台页面显示的日期、城市、票价和余票为准。</p>
+        <div class="live-tools">
+          <label>城市
+            <select id="liveCity">
+              <option value="全国">全国</option>
+            </select>
+          </label>
+          <label>偏好
+            <select id="liveTaste">
+              <option value="古风 舞剧">古风舞剧</option>
+              <option value="舞剧">全部舞剧</option>
+              <option value="经典 音乐剧">经典音乐剧</option>
+              <option value="音乐剧">全部音乐剧</option>
+            </select>
+          </label>
+          <label>剧名
+            <select id="liveShow"></select>
+          </label>
+          <label>时间
+            <select id="liveWindow">
+              <option value="本周">本周</option>
+              <option value="本月" selected>本月</option>
+              <option value="近三个月">近三个月</option>
+              <option value="下半年">下半年</option>
+            </select>
+          </label>
+          <button class="btn primary" id="refreshLive">刷新入口</button>
+        </div>
+        <div class="source-grid" id="sourceGrid"></div>
+        <div class="fresh-list" id="freshList"></div>
+      </section>
+
+      <section class="live-panel">
+        <h3>京津地区专区</h3>
+        <p class="subtitle">聚焦北京、天津近期可能可看的舞剧和音乐剧。长关键词只用于发现线索；进入大麦/猫眼时仍然只搜剧名。</p>
+        <div class="source-grid" id="regionDiscovery"></div>
+        <div class="region-split" id="regionBoard"></div>
+      </section>
+
+      <section class="library-tools">
+        <h3>可更新剧目库</h3>
+        <p class="subtitle" id="autoUpdateStatus">自动更新会定期从公开票务/剧院信息中发现新剧目；你也可以临时手动加入。新增内容会保存在本机浏览器，之后也会参与下方筛选和平台纯剧名检索。</p>
+        <div class="add-grid">
+          <label>剧名
+            <input id="newTitle" placeholder="例如：来自远方">
+          </label>
+          <label>类型
+            <select id="newType">
+              <option value="舞剧">舞剧</option>
+              <option value="音乐剧">音乐剧</option>
+            </select>
+          </label>
+          <label>风格
+            <select id="newStyle">
+              <option value="国创">国创</option>
+              <option value="古风">古风</option>
+              <option value="经典">经典</option>
+              <option value="海外">海外</option>
+              <option value="红色">红色</option>
+            </select>
+          </label>
+          <label>城市
+            <input id="newCities" placeholder="北京、上海、深圳">
+          </label>
+          <button class="btn primary" id="addShow">加入</button>
+        </div>
+        <div class="small-actions">
+          <button class="btn" id="exportShows">导出新增剧目</button>
+          <button class="btn" id="clearAdded">清空新增</button>
+        </div>
+      </section>
+
+      <div class="quick-stats">
+        <div class="stat"><strong id="statDance">0</strong><span>舞剧条目</span></div>
+        <div class="stat"><strong id="statMusical">0</strong><span>音乐剧条目</span></div>
+        <div class="stat"><strong id="statAncient">0</strong><span>古风/国风重点</span></div>
+        <div class="stat"><strong id="statFav">0</strong><span>已收藏</span></div>
+      </div>
+
+      <div class="grid" id="grid"></div>
+      <footer>
+        说明：本页是离线资料库与检索助手，不自动抓取票务、不代抢、不自动刷新。实际开票时间、票价、场馆、卡司和余票以官方剧院、制作方及票务平台实时页面为准。
+      </footer>
+    </main>
+  </div>
+
+  <section class="drawer" id="drawer" aria-live="polite"></section>
+
+  <script id="auto-discovered-shows" type="application/json">
+{
+  "updatedAt": "2026-06-27 16:15",
+  "sourceNote": "基于北京天桥艺术中心、北京保利剧院、津湾大剧院公开排期/购票页，以及大麦、百度公开检索结果人工整理；优先保留北京、天津近期在演或近期售票线索。",
+  "items": [
+    {
+      "title": "长腿叔叔",
+      "type": "音乐剧",
+      "style": ["经典", "驻演", "改编"],
+      "cities": ["北京"],
+      "source": "北京天桥艺术中心购票官网",
+      "summary": "天桥艺术中心购票页显示中文版《长腿叔叔》北京驻演版于 2026-06-25 至 2026-07-12 在多功能厅演出，属于近期可售候选。",
+      "discoveredAt": "2026-06-27"
+    },
+    {
+      "title": "嫌疑人X的献身",
+      "type": "音乐剧",
+      "style": ["悬疑", "改编", "国创"],
+      "cities": ["北京"],
+      "source": "北京天桥艺术中心购票官网",
+      "summary": "天桥艺术中心购票页公开展示音乐剧《嫌疑人X的献身》将于 2026-08-07 至 2026-08-09 在大剧场上演，已进入近期售票视野。",
+      "discoveredAt": "2026-06-27"
+    },
+    {
+      "title": "垂虹别意·唐寅",
+      "type": "舞剧",
+      "style": ["国风", "古风", "新编"],
+      "cities": ["北京"],
+      "source": "大麦公开检索结果（天桥艺术中心）",
+      "summary": "百度收录的大麦详情页显示中国歌剧舞剧院舞剧《垂虹别意·唐寅》将于 2026-07-23 至 2026-07-26 在天桥艺术中心大剧场演出。",
+      "discoveredAt": "2026-06-27"
+    },
+    {
+      "title": "道林格雷的画像",
+      "type": "音乐剧",
+      "style": ["经典", "改编", "海外"],
+      "cities": ["北京"],
+      "source": "公开票务检索结果（天桥艺术中心）",
+      "summary": "公开票务检索结果显示音乐剧《道林格雷的画像》将于 2026-07-30 至 2026-08-02 在天桥艺术中心大剧场上演，属于近期值得关注的经典改编音乐剧。",
+      "discoveredAt": "2026-06-27"
+    },
+    {
+      "title": "狐说臣与仙",
+      "type": "音乐剧",
+      "style": ["国风", "古风", "原创"],
+      "cities": ["北京"],
+      "source": "北京旅游网 2026年6月演出预告",
+      "summary": "北京旅游网 2026 年 6 月演出预告提到中国东方演艺集团音乐剧团《狐说臣与仙》在北京天桥艺术中心演出，属于近期国风音乐剧线索。",
+      "discoveredAt": "2026-06-27"
+    },
+    {
+      "title": "人间失格",
+      "type": "音乐剧",
+      "style": ["经典", "改编", "国创"],
+      "cities": ["北京"],
+      "source": "北京保利剧院/保利票务公开排期",
+      "summary": "北京保利剧院公开排期显示中文原创音乐剧《人间失格》将于 2026-06-25 至 2026-06-28 在北京保利剧院演出，且公开检索仍可见后续售票信息。",
+      "discoveredAt": "2026-06-27"
+    },
+    {
+      "title": "龟兹",
+      "type": "舞剧",
+      "style": ["国风", "古风", "丝路"],
+      "cities": ["北京"],
+      "source": "北京保利剧院/保利票务公开排期",
+      "summary": "北京保利剧院公开排期显示佟睿睿导演作品舞剧《龟兹》将于 2026-07-10 至 2026-07-11 在北京保利剧院演出。",
+      "discoveredAt": "2026-06-27"
+    },
+    {
+      "title": "天工开物",
+      "type": "舞剧",
+      "style": ["国风", "古风", "传统文化"],
+      "cities": ["北京"],
+      "source": "北京保利剧院公开检索结果",
+      "summary": "北京保利剧院公开检索结果在《龟兹》之后列出舞剧《天工开物》，符合近期北京舞剧排期候选。",
+      "discoveredAt": "2026-06-27"
+    },
+    {
+      "title": "梦回·红楼梦",
+      "type": "舞剧",
+      "style": ["国风", "古风", "经典改编"],
+      "cities": ["天津"],
+      "source": "央广网：津湾大剧院“五一”焕新呈现",
+      "summary": "津湾大剧院复开报道明确提到 2026 年将持续推出舞剧《梦回·红楼梦》，属于天津近期值得跟踪的国风舞剧线索。",
+      "discoveredAt": "2026-06-27"
+    },
+    {
+      "title": "卡门",
+      "type": "舞剧",
+      "style": ["经典", "海外", "弗拉门戈"],
+      "cities": ["天津"],
+      "source": "央广网：津湾大剧院“五一”焕新呈现",
+      "summary": "津湾大剧院复开报道提到弗拉门戈舞剧《卡门》将作为 2026 年后续重点内容之一，属于天津经典舞剧候选。",
+      "discoveredAt": "2026-06-27"
+    },
+    {
+      "title": "歌剧魅影",
+      "type": "音乐剧",
+      "style": ["经典", "海外", "英文原版系"],
+      "cities": ["天津"],
+      "source": "央广网：津湾大剧院“五一”焕新呈现",
+      "summary": "津湾大剧院复开报道在 2026 年后续项目中点名《歌剧魅影》，可作为天津方向的经典音乐剧售票线索继续跟踪。",
+      "discoveredAt": "2026-06-27"
+    }
+  ]
+}
+  </script>
+
+  <script>
+    const shows = [
+      {
+        title: "只此青绿",
+        type: "舞剧",
+        style: ["古风", "国创", "经典"],
+        cities: ["北京", "上海", "南京", "杭州", "广州", "深圳", "成都", "西安", "武汉", "长沙"],
+        origin: "中国东方演艺集团，灵感来自《千里江山图》",
+        summary: "以宋代青绿山水为审美核心，用舞蹈把画卷、展卷人、希孟与山河意象连接起来。",
+        why: "视觉辨识度极高，适合喜欢宋韵、书画、国风美学和群舞调度的人。",
+        highlights: ["青绿腰、展卷式舞台语汇", "服化道与山水色彩很有记忆点", "适合初看舞剧的观众"],
+        bestFor: "国风入门、亲友同行、想看“美到出圈”的舞剧。",
+        keywords: "只此青绿 舞剧 巡演"
+      },
+      {
+        title: "红楼梦",
+        type: "舞剧",
+        style: ["古风", "国创"],
+        cities: ["南京", "北京", "上海", "苏州", "杭州", "深圳", "广州", "成都", "重庆"],
+        origin: "江苏大剧院原创民族舞剧",
+        summary: "以《红楼梦》人物命运和大观园群像为线索，重在东方审美、人物关系和宿命感。",
+        why: "古典文学底子厚，舞美、服装和人物群像都适合细看。",
+        highlights: ["金陵十二钗群像", "古典文学情绪浓", "适合二刷与做功课后观看"],
+        bestFor: "喜欢曹雪芹、古典美学、群像叙事的人。",
+        keywords: "舞剧 红楼梦 巡演 江苏大剧院"
+      },
+      {
+        title: "永不消逝的电波",
+        type: "舞剧",
+        style: ["红色", "经典", "国创"],
+        cities: ["上海", "北京", "南京", "杭州", "广州", "深圳", "武汉", "长沙", "成都", "西安"],
+        origin: "上海歌舞团代表作品",
+        summary: "以谍战叙事、海派风格和舞剧表达讲述地下工作者的信念与牺牲。",
+        why: "叙事清晰、戏剧张力强，是近年中文舞剧里口碑很稳的一部。",
+        highlights: ["旗袍群舞和海派城市质感", "故事性强", "舞台节奏紧凑"],
+        bestFor: "想看剧情清楚、情绪推进强、适合带长辈的舞剧。",
+        keywords: "永不消逝的电波 舞剧 巡演"
+      },
+      {
+        title: "咏春",
+        type: "舞剧",
+        style: ["国创", "经典"],
+        cities: ["深圳", "广州", "北京", "上海", "佛山", "厦门", "成都", "武汉", "香港"],
+        origin: "深圳原创舞剧，融合咏春拳与香云纱",
+        summary: "把岭南非遗、武术身体性和电影片场叙事组合在一起，动作观赏性很强。",
+        why: "如果你喜欢武侠、岭南文化和强节奏身体表达，这部很对味。",
+        highlights: ["拳法与舞蹈结合", "香云纱视觉符号", "男性群舞能量强"],
+        bestFor: "武侠审美、动作戏爱好者、想看国创舞剧新表达的人。",
+        keywords: "舞剧 咏春 巡演"
+      },
+      {
+        title: "杜甫",
+        type: "舞剧",
+        style: ["古风", "国创"],
+        cities: ["重庆", "成都", "北京", "上海", "西安", "郑州", "武汉", "南京"],
+        origin: "以诗圣杜甫人生与时代为题材",
+        summary: "以诗、史、家国命运为核心，呈现杜甫漂泊、忧思与文学精神。",
+        why: "唐风、诗意和家国叙事比较浓，适合喜欢文学题材的人。",
+        highlights: ["诗意意象", "唐代气象", "人物内心表达"],
+        bestFor: "喜欢唐诗、历史人物、沉稳厚重舞台气质的人。",
+        keywords: "舞剧 杜甫 巡演"
+      },
+      {
+        title: "孔子",
+        type: "舞剧",
+        style: ["古风", "国创"],
+        cities: ["济南", "曲阜", "北京", "上海", "南京", "杭州", "西安", "广州"],
+        origin: "中国古典思想人物题材舞剧",
+        summary: "以孔子周游列国、礼乐理想和师徒关系为主要叙事支点。",
+        why: "礼乐、儒家文化和古典舞语汇结合紧密，适合看传统文化主题。",
+        highlights: ["礼乐审美", "历史人物群像", "舞台仪式感"],
+        bestFor: "传统文化爱好者、亲子文化教育观演。",
+        keywords: "舞剧 孔子 巡演"
+      },
+      {
+        title: "李白",
+        type: "舞剧",
+        style: ["古风", "国创"],
+        cities: ["北京", "上海", "南京", "杭州", "西安", "成都", "武汉", "合肥"],
+        origin: "唐诗与诗人生命题材",
+        summary: "围绕李白的诗酒、漂泊、理想与浪漫气质展开。",
+        why: "更偏浪漫和抒情，适合喜欢盛唐、诗意和人物气质的人。",
+        highlights: ["盛唐想象", "诗酒意象", "飘逸身段"],
+        bestFor: "唐风审美、诗词爱好者。",
+        keywords: "舞剧 李白 巡演"
+      },
+      {
+        title: "朱鹮",
+        type: "舞剧",
+        style: ["国创", "经典"],
+        cities: ["上海", "北京", "西安", "杭州", "南京", "广州", "深圳", "厦门"],
+        origin: "上海歌舞团生态题材舞剧",
+        summary: "以珍稀鸟类朱鹮为意象，讲人与自然的关系，整体气质空灵清雅。",
+        why: "不算古风，但东方身体美学很强，画面干净，适合看群舞线条。",
+        highlights: ["白色羽翼视觉", "生态主题", "群舞线条美"],
+        bestFor: "喜欢诗性、自然主题、安静气质舞台的人。",
+        keywords: "舞剧 朱鹮 巡演"
+      },
+      {
+        title: "丝路花雨",
+        type: "舞剧",
+        style: ["古风", "经典"],
+        cities: ["兰州", "敦煌", "西安", "北京", "上海", "广州", "深圳", "成都"],
+        origin: "敦煌舞代表性经典作品",
+        summary: "以丝绸之路与敦煌壁画舞姿为灵感，是中国民族舞剧经典之一。",
+        why: "敦煌美学源头级作品，喜欢飞天、壁画、丝路题材可以重点关注。",
+        highlights: ["敦煌舞姿", "丝路故事", "经典民族舞剧"],
+        bestFor: "古风舞剧深度观众、敦煌文化爱好者。",
+        keywords: "丝路花雨 舞剧 演出"
+      },
+      {
+        title: "长恨歌",
+        type: "舞剧",
+        style: ["古风", "经典"],
+        cities: ["西安", "北京", "上海", "杭州", "成都", "武汉", "南京"],
+        origin: "以白居易《长恨歌》和唐明皇杨贵妃故事为题材",
+        summary: "盛唐宫廷、爱情悲剧与诗歌意象结合，适合古风审美观众。",
+        why: "华丽、戏剧性和传统题材都比较强，容易形成沉浸感。",
+        highlights: ["盛唐宫廷美学", "爱情悲剧", "华彩舞段"],
+        bestFor: "唐风、宫廷审美、古典爱情题材爱好者。",
+        keywords: "舞剧 长恨歌 演出"
+      },
+      {
+        title: "猫 Cats",
+        type: "音乐剧",
+        style: ["经典", "海外"],
+        cities: ["北京", "上海", "广州", "深圳", "杭州", "南京", "成都", "武汉"],
+        origin: "安德鲁·劳埃德·韦伯经典音乐剧",
+        summary: "世界经典音乐剧之一，以猫族舞会、角色群像和《Memory》等名曲闻名。",
+        why: "适合音乐剧入门，歌舞密度高，经典程度不用多说。",
+        highlights: ["Memory", "群像角色", "舞蹈与妆造辨识度高"],
+        bestFor: "第一次看英文原版/经典音乐剧、想听名曲的人。",
+        keywords: "音乐剧 猫 Cats 巡演 中国"
+      },
+      {
+        title: "剧院魅影 The Phantom of the Opera",
+        type: "音乐剧",
+        style: ["经典", "海外"],
+        cities: ["上海", "北京", "广州", "深圳", "杭州", "南京", "成都"],
+        origin: "安德鲁·劳埃德·韦伯代表作",
+        summary: "哥特爱情、歌剧院舞台奇观与高辨识度旋律，是商业音乐剧经典。",
+        why: "舞美规格、旋律流传度和戏剧氛围都很强，适合看大制作。",
+        highlights: ["吊灯名场面", "The Music of the Night", "华丽舞美"],
+        bestFor: "偏爱大制作、浪漫哥特、经典旋律的人。",
+        keywords: "剧院魅影 音乐剧 中国 巡演"
+      },
+      {
+        title: "悲惨世界 Les Miserables",
+        type: "音乐剧",
+        style: ["经典", "海外"],
+        cities: ["上海", "北京", "广州", "深圳", "杭州", "成都"],
+        origin: "改编自雨果小说的世界经典音乐剧",
+        summary: "史诗叙事、革命群像和连续唱段构成强烈情绪推进。",
+        why: "音乐剧殿堂级作品，适合愿意沉浸在故事和音乐里的人。",
+        highlights: ["One Day More", "Do You Hear the People Sing?", "史诗群像"],
+        bestFor: "喜欢大叙事、强音乐性、经典文学改编的人。",
+        keywords: "悲惨世界 音乐剧 中国 演出"
+      },
+      {
+        title: "芝加哥 Chicago",
+        type: "音乐剧",
+        style: ["经典", "海外"],
+        cities: ["上海", "北京", "广州", "深圳", "杭州", "南京", "武汉"],
+        origin: "百老汇经典音乐剧",
+        summary: "爵士年代、讽刺喜剧和极简高质感编舞，节奏利落。",
+        why: "成年人会更吃它的讽刺、性感和黑色幽默。",
+        highlights: ["All That Jazz", "Fosse 风格编舞", "黑色幽默"],
+        bestFor: "喜欢爵士、百老汇风格、成熟题材的人。",
+        keywords: "芝加哥 音乐剧 中国 巡演"
+      },
+      {
+        title: "妈妈咪呀 Mamma Mia!",
+        type: "音乐剧",
+        style: ["经典", "海外"],
+        cities: ["北京", "上海", "广州", "深圳", "杭州", "成都", "武汉", "厦门"],
+        origin: "ABBA 金曲点唱机音乐剧",
+        summary: "海岛婚礼、亲情喜剧和 ABBA 金曲串联，气氛轻松热闹。",
+        why: "适合和朋友、家人一起看，开心、熟悉、门槛低。",
+        highlights: ["Dancing Queen", "ABBA 金曲", "合家欢气氛"],
+        bestFor: "想看轻松快乐、旋律熟悉的经典音乐剧。",
+        keywords: "妈妈咪呀 音乐剧 中国 巡演"
+      },
+      {
+        title: "摇滚莫扎特 Mozart l'Opera Rock",
+        type: "音乐剧",
+        style: ["经典", "海外"],
+        cities: ["上海", "北京", "广州", "深圳", "杭州", "南京", "成都"],
+        origin: "法语音乐剧代表作",
+        summary: "用摇滚、流行和华丽舞台讲莫扎特的才华、反叛与命运。",
+        why: "法扎在国内音乐剧观众中人气很高，歌曲传唱度强。",
+        highlights: ["L'assasymphonie", "法语摇滚", "华丽服化"],
+        bestFor: "法语音乐剧入门、喜欢高能旋律和华丽舞台的人。",
+        keywords: "摇滚莫扎特 音乐剧 中国 巡演"
+      },
+      {
+        title: "罗密欧与朱丽叶 Romeo et Juliette",
+        type: "音乐剧",
+        style: ["经典", "海外"],
+        cities: ["上海", "北京", "广州", "深圳", "杭州", "南京", "成都"],
+        origin: "法语音乐剧经典",
+        summary: "莎士比亚爱情悲剧的流行音乐剧表达，旋律抓耳，青春感强。",
+        why: "情绪直接、歌好听，是法语音乐剧里很适合入门的一部。",
+        highlights: ["Aimer", "家族冲突群舞", "青春悲剧"],
+        bestFor: "喜欢爱情题材、法语音乐剧、流行旋律的人。",
+        keywords: "罗密欧与朱丽叶 法语音乐剧 中国"
+      },
+      {
+        title: "伊丽莎白 Elisabeth",
+        type: "音乐剧",
+        style: ["经典", "海外"],
+        cities: ["上海", "北京", "广州", "深圳", "杭州", "成都"],
+        origin: "德奥音乐剧代表作",
+        summary: "以茜茜公主与“死神”的关系重写历史人物命运，暗色华丽。",
+        why: "音乐剧迷常年高关注，音乐、人物和美学都很有辨识度。",
+        highlights: ["暗色宫廷美学", "死神角色", "德奥音乐剧代表"],
+        bestFor: "资深音乐剧观众、喜欢历史人物与暗色美学的人。",
+        keywords: "伊丽莎白 音乐剧 中国 演出"
+      },
+      {
+        title: "近乎正常 Next to Normal",
+        type: "音乐剧",
+        style: ["经典", "海外"],
+        cities: ["上海", "北京", "广州", "深圳", "南京", "杭州", "成都"],
+        origin: "托尼奖与普利策奖获奖音乐剧",
+        summary: "聚焦家庭、心理健康和创伤议题，音乐偏摇滚，情绪浓度高。",
+        why: "体量不一定最大，但文本和音乐很扎实，适合认真看戏的人。",
+        highlights: ["心理议题", "摇滚音乐", "家庭关系"],
+        bestFor: "喜欢现代题材、强文本、小剧场质感的人。",
+        keywords: "近乎正常 音乐剧 中国"
+      },
+      {
+        title: "赵氏孤儿",
+        type: "音乐剧",
+        style: ["国创", "经典"],
+        cities: ["上海", "北京", "广州", "深圳", "南京", "杭州", "成都", "武汉"],
+        origin: "中国故事音乐剧代表作品之一",
+        summary: "取材中国古典悲剧，围绕忠义、牺牲与复仇展开。",
+        why: "如果想从海外经典转向中文原创音乐剧，这部值得放进清单。",
+        highlights: ["中国古典悲剧", "中文音乐剧", "戏剧冲突强"],
+        bestFor: "想看中文原创、历史悲剧和强剧情的人。",
+        keywords: "音乐剧 赵氏孤儿 巡演"
+      }
+    ];
+
+    const liveSources = [
+      {
+        name: "大麦",
+        note: "覆盖全国商业演出，适合看开票状态、票档、实名规则。",
+        url: (q) => `https://search.damai.cn/search.html?keyword=${encodeURIComponent(q)}`
+      },
+      {
+        name: "猫眼演出",
+        note: "适合交叉核验音乐剧、舞剧、剧场演出是否仍在售。",
+        url: (q) => `https://www.maoyan.com/query?kw=${encodeURIComponent(q)}`
+      },
+      {
+        name: "票星球",
+        note: "有些剧场项目会在这里售票，可作为补充来源。",
+        url: (q) => `https://www.baidu.com/s?wd=${encodeURIComponent(q + " 票星球 演出")}`
+      },
+      {
+        name: "剧院官网",
+        note: "最适合核验排期变更、卡司、退改规则和加场信息。",
+        url: (q) => `https://www.baidu.com/s?wd=${encodeURIComponent(q + " 剧院 官网 演出日程")}`
+      }
+    ];
+
+    const liveCityGroups = [
+      "北京", "上海", "广州", "深圳", "南京", "杭州", "成都", "重庆", "武汉", "长沙",
+      "西安", "苏州", "天津", "厦门", "佛山", "郑州", "合肥", "宁波", "青岛", "昆明"
+    ];
+
+    const state = {
+      q: "",
+      type: "",
+      style: "",
+      city: "",
+      favOnly: false,
+      favs: JSON.parse(localStorage.getItem("theatreFavs") || "[]"),
+      addedShows: JSON.parse(localStorage.getItem("theatreAddedShows") || "[]"),
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const grid = $("grid");
+    const drawer = $("drawer");
+
+    function autoDiscoveredData() {
+      try {
+        return JSON.parse($("auto-discovered-shows").textContent || "{}");
+      } catch (error) {
+        return { updatedAt: "", items: [] };
+      }
+    }
+
+    function normalizeAutoShow(item) {
+      const type = item.type === "音乐剧" ? "音乐剧" : "舞剧";
+      const style = Array.isArray(item.style) && item.style.length ? item.style : [type === "舞剧" ? "国创" : "经典"];
+      const cities = Array.isArray(item.cities) && item.cities.length ? item.cities : ["全国"];
+      return {
+        title: item.title,
+        type,
+        style,
+        cities,
+        origin: item.source || "自动发现，来自公开票务/剧院信息",
+        summary: item.summary || "由定期更新任务发现的近期演出候选。请通过详情里的平台入口核验具体城市、日期、票价与余票。",
+        why: item.why || "自动加入候选剧目库；平台搜索会只使用剧名。",
+        highlights: item.highlights || ["自动发现候选", "需以官方/票务页面实时信息为准", "可收藏后持续关注"],
+        bestFor: item.bestFor || "近期真实在演项目追踪。",
+        keywords: item.title,
+        autoDiscovered: true,
+        discoveredAt: item.discoveredAt || autoDiscoveredData().updatedAt || ""
+      };
+    }
+
+    function allShows() {
+      const merged = [...shows, ...autoDiscoveredData().items.map(normalizeAutoShow), ...state.addedShows];
+      const seen = new Set();
+      return merged.filter((show) => {
+        const key = searchName(show);
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    }
+
+    function saveAddedShows() {
+      localStorage.setItem("theatreAddedShows", JSON.stringify(state.addedShows));
+    }
+
+    function searchName(showOrTitle) {
+      const title = typeof showOrTitle === "string" ? showOrTitle : showOrTitle.title;
+      return title
+        .replace(/\s+[A-Za-z].*$/, "")
+        .replace(/[！!：:].*$/, "")
+        .trim();
+    }
+
+    function ticketLinks(show) {
+      const q = encodeURIComponent(searchName(show));
+      return {
+        damai: `https://search.damai.cn/search.html?keyword=${q}`,
+        maoyan: `https://www.maoyan.com/query?kw=${q}`,
+        web: `https://www.baidu.com/s?wd=${q}%20官方%20演出%20排期`
+      };
+    }
+
+    function regionDiscoveryLinks() {
+      const regions = [
+        {
+          city: "北京",
+          queries: [
+            "北京 舞剧 音乐剧 2026 本月 正在售票",
+            "北京 天桥艺术中心 音乐剧 舞剧 演出日程",
+            "北京 国家大剧院 舞剧 音乐剧 演出日程"
+          ]
+        },
+        {
+          city: "天津",
+          queries: [
+            "天津 舞剧 音乐剧 2026 本月 正在售票",
+            "天津大剧院 音乐剧 舞剧 演出日程",
+            "天津 保利剧院 舞剧 音乐剧 演出"
+          ]
+        }
+      ];
+      $("regionDiscovery").innerHTML = regions.map((region) => `
+        <article class="source-card">
+          <h4>${region.city}发现入口</h4>
+          <p>${region.queries[0]}<br>用于发现新剧名，找到剧名后自动任务会合并进下方剧目库。</p>
+          <a href="https://www.baidu.com/s?wd=${encodeURIComponent(region.queries.join(" "))}" target="_blank" rel="noreferrer">网页核验</a>
+        </article>
+      `).join("");
+    }
+
+    function renderRegionBoard() {
+      const regions = ["北京", "天津"];
+      $("regionBoard").innerHTML = regions.map((city) => {
+        const list = allShows().filter((show) => show.cities.includes(city)).slice(0, 12);
+        const rows = list.length ? list.map((show) => {
+          const links = ticketLinks(show);
+          return `
+            <div class="region-show">
+              <div>
+                <strong>${searchName(show)}</strong>
+                <span>${show.type} · ${show.style.slice(0, 2).join(" / ")}${show.autoDiscovered ? " · 自动发现" : ""}${show.userAdded ? " · 手动新增" : ""}</span>
+              </div>
+              <a href="${links.damai}" target="_blank" rel="noreferrer">大麦直搜</a>
+            </div>
+          `;
+        }).join("") : `<div class="empty">暂时没有匹配到${city}条目。自动更新任务会继续补充。</div>`;
+        return `
+          <div class="region-column">
+            <h4>${city}</h4>
+            ${rows}
+          </div>
+        `;
+      }).join("");
+    }
+
+    function liveCandidates() {
+      const taste = $("liveTaste").value;
+      const source = allShows();
+      if (taste === "古风 舞剧") return source.filter((show) => show.type === "舞剧" && show.style.includes("古风"));
+      if (taste === "经典 音乐剧") return source.filter((show) => show.type === "音乐剧" && show.style.includes("经典"));
+      if (taste === "舞剧") return source.filter((show) => show.type === "舞剧");
+      return source.filter((show) => show.type === "音乐剧");
+    }
+
+    function populateLiveShows() {
+      const current = $("liveShow").value;
+      const candidates = liveCandidates();
+      $("liveShow").innerHTML = candidates.map((show) => {
+        const value = searchName(show);
+        return `<option value="${value}">${value}</option>`;
+      }).join("");
+      if (candidates.some((show) => searchName(show) === current)) {
+        $("liveShow").value = current;
+      }
+    }
+
+    function liveQuery() {
+      return $("liveShow").value || searchName(liveCandidates()[0]);
+    }
+
+    function renderLive() {
+      const q = liveQuery();
+      $("sourceGrid").innerHTML = liveSources.map((source) => `
+        <article class="source-card">
+          <h4>${source.name}</h4>
+          <p>${source.note}<br>搜索词只填：${q}</p>
+          <a href="${source.url(q)}" target="_blank" rel="noreferrer">打开实时检索</a>
+        </article>
+      `).join("");
+
+      const city = $("liveCity").value;
+      const windowText = $("liveWindow").value;
+      const cityPart = city === "全国" ? "全国" : city;
+      const discovery = [
+        `${cityPart} ${$("liveTaste").value} ${windowText} 2026 正在售票`,
+        `${cityPart} 剧院 演出日程 舞剧 音乐剧 ${windowText}`,
+        `${cityPart} 保利剧院 大剧院 音乐剧 舞剧 2026`
+      ].map((query) => `
+        <div class="fresh-item">
+          <div>
+            <strong>发现新剧目</strong>
+            <span>${query}<br>这里可以用长关键词找线索；找到具体剧名后，再加入上方“可更新剧目库”。</span>
+          </div>
+          <a href="https://www.baidu.com/s?wd=${encodeURIComponent(query)}" target="_blank" rel="noreferrer">网页核验</a>
+        </div>
+      `);
+      const known = liveCandidates().slice(0, 8).map((show) => {
+        const name = searchName(show);
+        const href = `https://search.damai.cn/search.html?keyword=${encodeURIComponent(name)}`;
+        return `
+          <div class="fresh-item">
+            <div>
+              <strong>${name}</strong>
+              <span>平台搜索只用剧名；打开结果后再手动核验城市：${cityPart}，时间：${windowText}。<br>${show.why}</span>
+            </div>
+            <a href="${href}" target="_blank" rel="noreferrer">大麦直搜</a>
+          </div>
+        `;
+      });
+      $("freshList").innerHTML = [...discovery, ...known].join("");
+    }
+
+    function allCities() {
+      return [...new Set(allShows().flatMap((show) => show.cities))].sort((a, b) => a.localeCompare(b, "zh-Hans-CN"));
+    }
+
+    function refreshCityOptions() {
+      const current = $("city").value;
+      $("city").innerHTML = `<option value="">全国</option>` + allCities().map((city) => `<option value="${city}">${city}</option>`).join("");
+      $("city").value = allCities().includes(current) ? current : "";
+    }
+
+    function saveFavs() {
+      localStorage.setItem("theatreFavs", JSON.stringify(state.favs));
+    }
+
+    function isFav(title) {
+      return state.favs.includes(title);
+    }
+
+    function toggleFav(title) {
+      state.favs = isFav(title) ? state.favs.filter((item) => item !== title) : [...state.favs, title];
+      saveFavs();
+      render();
+    }
+
+    function matches(show) {
+      const haystack = [
+        show.title, show.type, show.origin, show.summary, show.why, show.bestFor,
+        show.cities.join(" "), show.style.join(" "), show.highlights.join(" ")
+      ].join(" ").toLowerCase();
+      const q = state.q.trim().toLowerCase();
+      return (!q || haystack.includes(q))
+        && (!state.type || show.type === state.type)
+        && (!state.style || show.style.includes(state.style))
+        && (!state.city || show.cities.includes(state.city))
+        && (!state.favOnly || isFav(show.title));
+    }
+
+    function addShowFromForm() {
+      const title = $("newTitle").value.trim();
+      const type = $("newType").value;
+      const style = $("newStyle").value;
+      const cities = $("newCities").value.split(/[、,，\s]+/).map((item) => item.trim()).filter(Boolean);
+      if (!title) return;
+      if (allShows().some((show) => searchName(show) === searchName(title))) {
+        alert("剧目库里已经有这个剧名了。");
+        return;
+      }
+      state.addedShows.push({
+        title,
+        type,
+        style: [style, type === "舞剧" ? "国创" : "经典"].filter((item, index, arr) => arr.indexOf(item) === index),
+        cities: cities.length ? cities : ["全国"],
+        origin: "手动加入，来自实时检索结果",
+        summary: "这是你从实时票务或剧院排期中加入的剧目。请通过详情里的平台入口核验具体城市、日期、票价与余票。",
+        why: "已加入本地剧目库；平台搜索会只使用剧名。",
+        highlights: ["需要以票务平台实时页面为准", "可在城市和类型筛选中继续追踪", "适合发现新巡演项目后长期关注"],
+        bestFor: "近期真实在演项目追踪。",
+        keywords: title,
+        userAdded: true
+      });
+      saveAddedShows();
+      $("newTitle").value = "";
+      $("newCities").value = "";
+      refreshCityOptions();
+      populateLiveShows();
+      renderLive();
+      render();
+    }
+
+    function exportAddedShows() {
+      const text = JSON.stringify(state.addedShows, null, 2);
+      const blob = new Blob([text], { type: "application/json;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "theatre-added-shows.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function clearAddedShows() {
+      if (!state.addedShows.length) return;
+      if (!confirm("确定清空你手动加入的剧目吗？内置剧目不会删除。")) return;
+      state.addedShows = [];
+      saveAddedShows();
+      refreshCityOptions();
+      populateLiveShows();
+      renderLive();
+      render();
+    }
+
+    function card(show) {
+      const links = ticketLinks(show);
+      return `
+        <article class="card">
+          <div class="card-media ${show.type === "舞剧" ? "dance" : "musical"}">
+            <span class="badge">${show.type} · ${show.style.slice(0, 2).join(" / ")}</span>
+          </div>
+          <div class="card-body">
+            <div>
+              <h3>${show.title}</h3>
+              <p class="meta">${show.origin}</p>
+            </div>
+            <p class="desc">${show.summary}</p>
+            <div class="tags">${show.autoDiscovered ? `<span class="tag auto">自动发现</span>` : ""}${show.userAdded ? `<span class="tag auto">手动新增</span>` : ""}${show.cities.slice(0, 6).map((city) => `<span class="tag">${city}</span>`).join("")}</div>
+            <div class="card-actions">
+              <button onclick="openDetail('${show.title.replace(/'/g, "\\'")}')">详情</button>
+              <button onclick="toggleFav('${show.title.replace(/'/g, "\\'")}')">${isFav(show.title) ? "已收藏" : "收藏"}</button>
+              <a href="${links.damai}" target="_blank" rel="noreferrer">大麦检索</a>
+              <a href="${links.web}" target="_blank" rel="noreferrer">官方检索</a>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function openDetail(title) {
+      const show = allShows().find((item) => item.title === title);
+      if (!show) return;
+      const links = ticketLinks(show);
+      drawer.innerHTML = `
+        <div class="drawer-head">
+          <div>
+            <p class="subtitle">${show.type} · ${show.style.join(" / ")}</p>
+            <h2>${show.title}</h2>
+          </div>
+          <button class="btn" onclick="closeDetail()">关闭</button>
+        </div>
+        <div class="drawer-section">
+          <h3>为什么值得看</h3>
+          <p>${show.why}</p>
+        </div>
+        <div class="drawer-section">
+          <h3>看点</h3>
+          <ul>${show.highlights.map((item) => `<li>${item}</li>`).join("")}</ul>
+        </div>
+        <div class="drawer-section">
+          <h3>适合人群</h3>
+          <p>${show.bestFor}</p>
+        </div>
+        <div class="drawer-section">
+          <h3>常见巡演/重点关注城市</h3>
+          <p>${show.cities.join("、")}</p>
+        </div>
+        <div class="drawer-section">
+          <h3>实时信息入口</h3>
+          <div class="card-actions">
+            <a href="${links.damai}" target="_blank" rel="noreferrer">大麦</a>
+            <a href="${links.maoyan}" target="_blank" rel="noreferrer">猫眼</a>
+            <a href="${links.web}" target="_blank" rel="noreferrer">官方网页</a>
+            <button onclick="toggleFav('${show.title.replace(/'/g, "\\'")}')">${isFav(show.title) ? "取消收藏" : "收藏"}</button>
+          </div>
+        </div>
+      `;
+      drawer.classList.add("open");
+    }
+
+    function closeDetail() {
+      drawer.classList.remove("open");
+    }
+
+    function renderStats(list) {
+      const source = allShows();
+      const autoCount = autoDiscoveredData().items.length || 0;
+      $("statDance").textContent = source.filter((show) => show.type === "舞剧").length;
+      $("statMusical").textContent = source.filter((show) => show.type === "音乐剧").length;
+      $("statAncient").textContent = source.filter((show) => show.style.includes("古风") || show.style.includes("国创")).length;
+      $("statFav").textContent = state.favs.length;
+      $("count").textContent = `当前显示 ${list.length} / ${source.length} 个，自动发现 ${autoCount} 个，手动新增 ${state.addedShows.length} 个`;
+    }
+
+    function render() {
+      const list = allShows().filter(matches);
+      renderStats(list);
+      grid.innerHTML = list.length ? list.map(card).join("") : `<div class="empty">没有匹配结果。换个城市、风格或关键词试试。</div>`;
+      regionDiscoveryLinks();
+      renderRegionBoard();
+      const auto = autoDiscoveredData();
+      const autoCount = Array.isArray(auto.items) ? auto.items.length : 0;
+      $("autoUpdateStatus").textContent = auto.updatedAt
+        ? `自动更新最近运行：${auto.updatedAt}，发现候选 ${autoCount} 个。自动任务只写入剧名和公开来源，平台检索仍只使用剧名。`
+        : "自动更新已预留数据入口；定期任务运行后会把新发现的剧目写到这里。你也可以临时手动加入。";
+    }
+
+    function init() {
+      refreshCityOptions();
+      $("liveCity").insertAdjacentHTML("beforeend", liveCityGroups.map((city) => `<option value="${city}">${city}</option>`).join(""));
+      ["q", "type", "style", "city"].forEach((id) => {
+        $(id).addEventListener("input", (event) => {
+          state[id] = event.target.value;
+          render();
+        });
+      });
+      $("liveTaste").addEventListener("input", () => {
+        populateLiveShows();
+        renderLive();
+      });
+      ["liveCity", "liveShow", "liveWindow"].forEach((id) => {
+        $(id).addEventListener("input", renderLive);
+      });
+      $("refreshLive").addEventListener("click", renderLive);
+      $("addShow").addEventListener("click", addShowFromForm);
+      $("exportShows").addEventListener("click", exportAddedShows);
+      $("clearAdded").addEventListener("click", clearAddedShows);
+      ["newTitle", "newCities"].forEach((id) => {
+        $(id).addEventListener("keydown", (event) => {
+          if (event.key === "Enter") addShowFromForm();
+        });
+      });
+      $("showFavs").addEventListener("click", () => {
+        state.favOnly = !state.favOnly;
+        $("showFavs").textContent = state.favOnly ? "显示全部" : "只看收藏";
+        render();
+      });
+      $("reset").addEventListener("click", () => {
+        state.q = state.type = state.style = state.city = "";
+        state.favOnly = false;
+        ["q", "type", "style", "city"].forEach((id) => $(id).value = "");
+        $("showFavs").textContent = "只看收藏";
+        render();
+      });
+      $("note").value = localStorage.getItem("theatreNote") || "";
+      $("note").addEventListener("input", (event) => localStorage.setItem("theatreNote", event.target.value));
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeDetail();
+      });
+      populateLiveShows();
+      renderLive();
+      render();
+    }
+
+    window.openDetail = openDetail;
+    window.closeDetail = closeDetail;
+    window.toggleFav = toggleFav;
+    init();
+  </script>
+</body>
+</html>
