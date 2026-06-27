@@ -278,21 +278,6 @@
       margin-bottom: 6px;
     }
 
-    .add-grid {
-      display: grid;
-      grid-template-columns: 1.2fr .7fr .8fr 1fr auto;
-      gap: 10px;
-      align-items: end;
-      margin-top: 14px;
-    }
-
-    .small-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-    }
-
     .region-split {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -473,7 +458,6 @@
       main { padding: 22px; }
       .quick-stats { grid-template-columns: repeat(2, 1fr); }
       .live-tools { grid-template-columns: 1fr 1fr; }
-      .add-grid { grid-template-columns: 1fr 1fr; }
       .region-split { grid-template-columns: 1fr; }
       .section-title { align-items: start; flex-direction: column; }
     }
@@ -482,7 +466,6 @@
       aside, main { padding: 16px; }
       .filter-row, .card-actions { grid-template-columns: 1fr; }
       .live-tools, .fresh-item { grid-template-columns: 1fr; }
-      .add-grid { grid-template-columns: 1fr; }
       .region-show { grid-template-columns: 1fr; }
       .quick-stats { grid-template-columns: 1fr; }
       .section-title h2 { font-size: 23px; }
@@ -501,6 +484,7 @@
       </div>
       <div class="stage-visual" aria-hidden="true"></div>
       <div class="controls">
+        <p class="subtitle">用下面的条件缩小剧目范围。收藏和观演备注只保存在你当前使用的浏览器，不会影响其他人。</p>
         <label>关键词
           <input id="q" type="search" placeholder="剧名、城市、风格、关键词">
         </label>
@@ -549,7 +533,7 @@
 
       <section class="live-panel">
         <h3>找真实正在演出的项目</h3>
-        <p class="subtitle">本地网页不能稳定读取大麦/猫眼的动态库存，所以这里生成实时检索入口。打开后以平台页面显示的日期、城市、票价和余票为准。</p>
+        <p class="subtitle">先选城市、偏好和具体剧名，再通过下方入口核验售票状态。平台页面显示的日期、城市、票价和余票才是最终依据。</p>
         <div class="live-tools">
           <label>城市
             <select id="liveCity">
@@ -583,43 +567,50 @@
 
       <section class="live-panel">
         <h3>京津地区专区</h3>
-        <p class="subtitle">聚焦北京、天津近期可能可看的舞剧和音乐剧。长关键词只用于发现线索；进入大麦/猫眼时仍然只搜剧名。</p>
+        <p class="subtitle">左侧入口用来发现北京、天津的新排期；右侧清单是已经收录的京津候选，点击“大麦直搜”后再核验场次。</p>
         <div class="source-grid" id="regionDiscovery"></div>
         <div class="region-split" id="regionBoard"></div>
       </section>
 
       <section class="library-tools">
-        <h3>可更新剧目库</h3>
-        <p class="subtitle" id="autoUpdateStatus">自动更新会定期从公开票务/剧院信息中发现新剧目；你也可以临时手动加入。新增内容会保存在本机浏览器，之后也会参与下方筛选和平台纯剧名检索。</p>
-        <div class="add-grid">
-          <label>剧名
-            <input id="newTitle" placeholder="例如：来自远方">
-          </label>
-          <label>类型
-            <select id="newType">
-              <option value="舞剧">舞剧</option>
-              <option value="音乐剧">音乐剧</option>
-            </select>
-          </label>
-          <label>风格
-            <select id="newStyle">
-              <option value="国创">国创</option>
-              <option value="古风">古风</option>
-              <option value="经典">经典</option>
-              <option value="海外">海外</option>
-              <option value="红色">红色</option>
-            </select>
-          </label>
-          <label>城市
-            <input id="newCities" placeholder="北京、上海、深圳">
-          </label>
-          <button class="btn primary" id="addShow">加入</button>
-        </div>
-        <div class="small-actions">
-          <button class="btn" id="exportShows">导出新增剧目</button>
-          <button class="btn" id="clearAdded">清空新增</button>
+        <h3>剧目库如何更新</h3>
+        <p class="subtitle" id="autoUpdateStatus">剧目由站点维护者通过公开剧院排期和票务信息更新，公开访客不能新增或删除共享内容。</p>
+        <p class="subtitle">如果朋友发现遗漏，可以把剧名和公开来源发给维护者；确认后会在下一次更新中加入。</p>
+      </section>
+
+      <section class="live-panel">
+        <h3>音乐剧追踪资源</h3>
+        <p class="subtitle">适合继续发现音乐剧、核对剧院排期和了解卡司。票务平台检索具体项目时，建议只输入剧名。</p>
+        <div class="source-grid">
+          <article class="source-card">
+            <h4>北京天桥艺术中心</h4>
+            <p>北京音乐剧重点场馆，可查看官方演出日历与开票信息。</p>
+            <a href="https://www.tartscenter.com/" target="_blank" rel="noreferrer">查看官网</a>
+          </article>
+          <article class="source-card">
+            <h4>国家大剧院</h4>
+            <p>用于核验国家大剧院和北京艺术中心的官方演出排期。</p>
+            <a href="https://www.chncpa.org/ycgp_220/" target="_blank" rel="noreferrer">查看演出</a>
+          </article>
+          <article class="source-card">
+            <h4>猫眼演出</h4>
+            <p>补充查看音乐剧巡演、开票状态和城市站点信息。</p>
+            <a href="https://show.maoyan.com/" target="_blank" rel="noreferrer">打开猫眼</a>
+          </article>
+          <article class="source-card">
+            <h4>音乐剧日历</h4>
+            <p>按城市和剧院浏览音乐剧排期，发现剧名后再回官方渠道核验。</p>
+            <a href="https://y.saoju.net/yyj/" target="_blank" rel="noreferrer">查看日历</a>
+          </article>
         </div>
       </section>
+
+      <div class="section-title">
+        <div>
+          <h2>剧目资料库</h2>
+          <p class="subtitle">下方卡片用于了解剧情、风格和常见巡演城市；点击详情看推荐理由，点击收藏建立自己的清单。</p>
+        </div>
+      </div>
 
       <div class="quick-stats">
         <div class="stat"><strong id="statDance">0</strong><span>舞剧条目</span></div>
@@ -630,7 +621,7 @@
 
       <div class="grid" id="grid"></div>
       <footer>
-        说明：本页是离线资料库与检索助手，不自动抓取票务、不代抢、不自动刷新。实际开票时间、票价、场馆、卡司和余票以官方剧院、制作方及票务平台实时页面为准。
+        说明：本页是公开资料库与检索助手，不代抢票，也不收集访客个人信息。收藏和备注只保存在当前浏览器；实际开票时间、票价、场馆、卡司和余票以官方剧院、制作方及票务平台实时页面为准。
       </footer>
     </main>
   </div>
@@ -639,8 +630,8 @@
 
   <script id="auto-discovered-shows" type="application/json">
 {
-  "updatedAt": "2026-06-27 16:15",
-  "sourceNote": "基于北京天桥艺术中心、北京保利剧院、津湾大剧院公开排期/购票页，以及大麦、百度公开检索结果人工整理；优先保留北京、天津近期在演或近期售票线索。",
+  "updatedAt": "2026-06-27 13:32",
+  "sourceNote": "基于北京天桥艺术中心、北京保利剧院、天津大剧院、津湾大剧院公开排期/购票页，以及制作方、大麦、猫眼等公开检索结果整理；优先保留北京、天津近期候选，并补充值得关注的全国音乐剧资源。",
   "items": [
     {
       "title": "长腿叔叔",
@@ -673,9 +664,9 @@
       "title": "道林格雷的画像",
       "type": "音乐剧",
       "style": ["经典", "改编", "海外"],
-      "cities": ["北京"],
-      "source": "公开票务检索结果（天桥艺术中心）",
-      "summary": "公开票务检索结果显示音乐剧《道林格雷的画像》将于 2026-07-30 至 2026-08-02 在天桥艺术中心大剧场上演，属于近期值得关注的经典改编音乐剧。",
+      "cities": ["北京", "天津"],
+      "source": "北京天桥艺术中心、天津大剧院公开排期检索",
+      "summary": "公开排期显示该剧将于 2026-07-24 至 07-25 在天津大剧院、07-30 至 08-02 在北京天桥艺术中心演出，是京津两地近期均可关注的经典改编音乐剧。",
       "discoveredAt": "2026-06-27"
     },
     {
@@ -739,6 +730,33 @@
       "cities": ["天津"],
       "source": "央广网：津湾大剧院“五一”焕新呈现",
       "summary": "津湾大剧院复开报道在 2026 年后续项目中点名《歌剧魅影》，可作为天津方向的经典音乐剧售票线索继续跟踪。",
+      "discoveredAt": "2026-06-27"
+    },
+    {
+      "title": "秘密花园",
+      "type": "音乐剧",
+      "style": ["经典", "改编", "治愈"],
+      "cities": ["北京"],
+      "source": "Mioji米欧吉公开开票信息、大麦公开售票线索",
+      "summary": "制作方公开信息显示音乐剧《秘密花园》北京站将于 2026-07-02 至 07-05 在二七剧场演出，并已公布大麦开票安排。",
+      "discoveredAt": "2026-06-27"
+    },
+    {
+      "title": "新贵",
+      "type": "音乐剧",
+      "style": ["驻演", "原创", "沉浸式"],
+      "cities": ["上海"],
+      "source": "小鹿追马DeerDrama公开开票信息、大麦/猫眼公开售票线索",
+      "summary": "公开开票信息显示音乐剧《新贵》已开放 2026 年 7 月上海驻演场次，可作为全国范围内持续售票的新音乐剧资源。",
+      "discoveredAt": "2026-06-27"
+    },
+    {
+      "title": "风声",
+      "type": "音乐剧",
+      "style": ["国创", "悬疑", "经典"],
+      "cities": ["上海"],
+      "source": "上海西岸大剧院 2026 夏秋演出季公开剧单",
+      "summary": "上海西岸大剧院公开的 2026 夏秋演出季将迭代升级版音乐剧《风声》列为重点项目，属于近期值得持续关注的高口碑国创音乐剧。",
       "discoveredAt": "2026-06-27"
     }
   ]
@@ -1023,8 +1041,7 @@
       style: "",
       city: "",
       favOnly: false,
-      favs: JSON.parse(localStorage.getItem("theatreFavs") || "[]"),
-      addedShows: JSON.parse(localStorage.getItem("theatreAddedShows") || "[]"),
+      favs: JSON.parse(localStorage.getItem("theatreFavs") || "[]")
     };
 
     const $ = (id) => document.getElementById(id);
@@ -1060,7 +1077,7 @@
     }
 
     function allShows() {
-      const merged = [...shows, ...autoDiscoveredData().items.map(normalizeAutoShow), ...state.addedShows];
+      const merged = [...shows, ...autoDiscoveredData().items.map(normalizeAutoShow)];
       const seen = new Set();
       return merged.filter((show) => {
         const key = searchName(show);
@@ -1068,10 +1085,6 @@
         seen.add(key);
         return true;
       });
-    }
-
-    function saveAddedShows() {
-      localStorage.setItem("theatreAddedShows", JSON.stringify(state.addedShows));
     }
 
     function searchName(showOrTitle) {
@@ -1129,7 +1142,7 @@
             <div class="region-show">
               <div>
                 <strong>${searchName(show)}</strong>
-                <span>${show.type} · ${show.style.slice(0, 2).join(" / ")}${show.autoDiscovered ? " · 自动发现" : ""}${show.userAdded ? " · 手动新增" : ""}</span>
+                <span>${show.type} · ${show.style.slice(0, 2).join(" / ")}${show.autoDiscovered ? " · 自动发现" : ""}</span>
               </div>
               <a href="${links.damai}" target="_blank" rel="noreferrer">大麦直搜</a>
             </div>
@@ -1182,19 +1195,16 @@
       const city = $("liveCity").value;
       const windowText = $("liveWindow").value;
       const cityPart = city === "全国" ? "全国" : city;
-      const discovery = [
-        `${cityPart} ${$("liveTaste").value} ${windowText} 2026 正在售票`,
-        `${cityPart} 剧院 演出日程 舞剧 音乐剧 ${windowText}`,
-        `${cityPart} 保利剧院 大剧院 音乐剧 舞剧 2026`
-      ].map((query) => `
+      const discoveryQuery = `${cityPart} ${$("liveTaste").value} ${windowText} 2026 正在售票 剧院演出日程`;
+      const discovery = `
         <div class="fresh-item">
           <div>
             <strong>发现新剧目</strong>
-            <span>${query}<br>这里可以用长关键词找线索；找到具体剧名后，再加入上方“可更新剧目库”。</span>
+            <span>${discoveryQuery}<br>用这一条综合搜索发现线索；找到具体剧名后，再通过剧院官网或票务平台核验。</span>
           </div>
-          <a href="https://www.baidu.com/s?wd=${encodeURIComponent(query)}" target="_blank" rel="noreferrer">网页核验</a>
+          <a href="https://www.baidu.com/s?wd=${encodeURIComponent(discoveryQuery)}" target="_blank" rel="noreferrer">网页核验</a>
         </div>
-      `);
+      `;
       const known = liveCandidates().slice(0, 8).map((show) => {
         const name = searchName(show);
         const href = `https://search.damai.cn/search.html?keyword=${encodeURIComponent(name)}`;
@@ -1208,7 +1218,7 @@
           </div>
         `;
       });
-      $("freshList").innerHTML = [...discovery, ...known].join("");
+      $("freshList").innerHTML = [discovery, ...known].join("");
     }
 
     function allCities() {
@@ -1248,60 +1258,6 @@
         && (!state.favOnly || isFav(show.title));
     }
 
-    function addShowFromForm() {
-      const title = $("newTitle").value.trim();
-      const type = $("newType").value;
-      const style = $("newStyle").value;
-      const cities = $("newCities").value.split(/[、,，\s]+/).map((item) => item.trim()).filter(Boolean);
-      if (!title) return;
-      if (allShows().some((show) => searchName(show) === searchName(title))) {
-        alert("剧目库里已经有这个剧名了。");
-        return;
-      }
-      state.addedShows.push({
-        title,
-        type,
-        style: [style, type === "舞剧" ? "国创" : "经典"].filter((item, index, arr) => arr.indexOf(item) === index),
-        cities: cities.length ? cities : ["全国"],
-        origin: "手动加入，来自实时检索结果",
-        summary: "这是你从实时票务或剧院排期中加入的剧目。请通过详情里的平台入口核验具体城市、日期、票价与余票。",
-        why: "已加入本地剧目库；平台搜索会只使用剧名。",
-        highlights: ["需要以票务平台实时页面为准", "可在城市和类型筛选中继续追踪", "适合发现新巡演项目后长期关注"],
-        bestFor: "近期真实在演项目追踪。",
-        keywords: title,
-        userAdded: true
-      });
-      saveAddedShows();
-      $("newTitle").value = "";
-      $("newCities").value = "";
-      refreshCityOptions();
-      populateLiveShows();
-      renderLive();
-      render();
-    }
-
-    function exportAddedShows() {
-      const text = JSON.stringify(state.addedShows, null, 2);
-      const blob = new Blob([text], { type: "application/json;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "theatre-added-shows.json";
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function clearAddedShows() {
-      if (!state.addedShows.length) return;
-      if (!confirm("确定清空你手动加入的剧目吗？内置剧目不会删除。")) return;
-      state.addedShows = [];
-      saveAddedShows();
-      refreshCityOptions();
-      populateLiveShows();
-      renderLive();
-      render();
-    }
-
     function card(show) {
       const links = ticketLinks(show);
       return `
@@ -1315,7 +1271,7 @@
               <p class="meta">${show.origin}</p>
             </div>
             <p class="desc">${show.summary}</p>
-            <div class="tags">${show.autoDiscovered ? `<span class="tag auto">自动发现</span>` : ""}${show.userAdded ? `<span class="tag auto">手动新增</span>` : ""}${show.cities.slice(0, 6).map((city) => `<span class="tag">${city}</span>`).join("")}</div>
+            <div class="tags">${show.autoDiscovered ? `<span class="tag auto">自动发现</span>` : ""}${show.cities.slice(0, 6).map((city) => `<span class="tag">${city}</span>`).join("")}</div>
             <div class="card-actions">
               <button onclick="openDetail('${show.title.replace(/'/g, "\\'")}')">详情</button>
               <button onclick="toggleFav('${show.title.replace(/'/g, "\\'")}')">${isFav(show.title) ? "已收藏" : "收藏"}</button>
@@ -1379,7 +1335,7 @@
       $("statMusical").textContent = source.filter((show) => show.type === "音乐剧").length;
       $("statAncient").textContent = source.filter((show) => show.style.includes("古风") || show.style.includes("国创")).length;
       $("statFav").textContent = state.favs.length;
-      $("count").textContent = `当前显示 ${list.length} / ${source.length} 个，自动发现 ${autoCount} 个，手动新增 ${state.addedShows.length} 个`;
+      $("count").textContent = `当前显示 ${list.length} / ${source.length} 个，近期自动发现 ${autoCount} 个`;
     }
 
     function render() {
@@ -1391,8 +1347,8 @@
       const auto = autoDiscoveredData();
       const autoCount = Array.isArray(auto.items) ? auto.items.length : 0;
       $("autoUpdateStatus").textContent = auto.updatedAt
-        ? `自动更新最近运行：${auto.updatedAt}，发现候选 ${autoCount} 个。自动任务只写入剧名和公开来源，平台检索仍只使用剧名。`
-        : "自动更新已预留数据入口；定期任务运行后会把新发现的剧目写到这里。你也可以临时手动加入。";
+        ? `最近更新：${auto.updatedAt}，收录近期候选 ${autoCount} 个。共享剧目只能由站点维护者更新，公开访客不能新增或删除。`
+        : "定期维护任务会把已核验的新剧目写入这里，公开访客不能修改共享剧目。";
     }
 
     function init() {
@@ -1412,14 +1368,6 @@
         $(id).addEventListener("input", renderLive);
       });
       $("refreshLive").addEventListener("click", renderLive);
-      $("addShow").addEventListener("click", addShowFromForm);
-      $("exportShows").addEventListener("click", exportAddedShows);
-      $("clearAdded").addEventListener("click", clearAddedShows);
-      ["newTitle", "newCities"].forEach((id) => {
-        $(id).addEventListener("keydown", (event) => {
-          if (event.key === "Enter") addShowFromForm();
-        });
-      });
       $("showFavs").addEventListener("click", () => {
         state.favOnly = !state.favOnly;
         $("showFavs").textContent = state.favOnly ? "显示全部" : "只看收藏";
