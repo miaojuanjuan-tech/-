@@ -287,7 +287,7 @@
 
     .region-split {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 14px;
       margin-top: 16px;
     }
@@ -573,8 +573,8 @@
       </section>
 
       <section class="live-panel">
-        <h3>北京、天津、长沙专区</h3>
-        <p class="subtitle">这里汇总已经收录的三个重点地区候选；点击“大麦直搜”会直接按剧名打开平台结果，再核验具体场次。</p>
+        <h3>五城重点专区</h3>
+        <p class="subtitle">汇总北京、天津、长沙、桂林、呼和浩特候选；点击“大麦直搜”会直接按剧名打开平台结果，再核验具体场次。</p>
         <div class="region-split" id="regionBoard"></div>
       </section>
 
@@ -619,6 +619,26 @@
             <button class="btn city-resource-button" data-city="长沙">选择长沙</button>
           </article>
           <article class="source-card">
+            <h4>桂林</h4>
+            <p>适合关注漓江歌剧院、山水实景演出和桂林艺术节项目。</p>
+            <div class="venue-links">
+              <a href="https://www.maoyan.com/query?kw=%E6%A1%82%E6%9E%97%E6%BC%93%E6%B1%9F%E6%AD%8C%E5%89%A7%E9%99%A2" target="_blank" rel="noreferrer">桂林漓江歌剧院</a>
+              <a href="https://www.maoyan.com/query?kw=%E5%B9%BF%E8%A5%BF%E7%9C%81%E7%AB%8B%E8%89%BA%E6%9C%AF%E9%A6%86" target="_blank" rel="noreferrer">广西省立艺术馆</a>
+              <a href="https://www.maoyan.com/query?kw=%E9%98%B3%E6%9C%94%E5%B1%B1%E6%B0%B4%E5%89%A7%E5%9C%BA" target="_blank" rel="noreferrer">阳朔山水剧场</a>
+            </div>
+            <button class="btn city-resource-button" data-city="桂林">选择桂林</button>
+          </article>
+          <article class="source-card">
+            <h4>呼和浩特</h4>
+            <p>适合关注草原题材舞剧、民族歌舞和马文化实景演出。</p>
+            <div class="venue-links">
+              <a href="https://www.nmgysjygw.cn/" target="_blank" rel="noreferrer">内蒙古艺术剧院</a>
+              <a href="https://www.maoyan.com/query?kw=%E5%86%85%E8%92%99%E5%8F%A4%E4%B9%8C%E5%85%B0%E6%81%B0%E7%89%B9" target="_blank" rel="noreferrer">内蒙古乌兰恰特</a>
+              <a href="https://www.maoyan.com/query?kw=%E5%86%85%E8%92%99%E5%8F%A4%E5%B0%91%E6%95%B0%E6%B0%91%E6%97%8F%E7%BE%A4%E4%BC%97%E6%96%87%E5%8C%96%E4%BD%93%E8%82%B2%E8%BF%90%E5%8A%A8%E4%B8%AD%E5%BF%83" target="_blank" rel="noreferrer">马文化演出场馆</a>
+            </div>
+            <button class="btn city-resource-button" data-city="呼和浩特">选择呼和浩特</button>
+          </article>
+          <article class="source-card">
             <h4>跨城市补充</h4>
             <p>需要比较其他城市时，可继续使用猫眼演出和音乐剧日历。</p>
             <div class="venue-links">
@@ -654,8 +674,8 @@
 
   <script id="auto-discovered-shows" type="application/json">
 {
-  "updatedAt": "2026-06-27 13:32",
-  "sourceNote": "基于北京天桥艺术中心、北京保利剧院、天津大剧院、津湾大剧院公开排期/购票页，以及制作方、大麦、猫眼等公开检索结果整理；优先保留北京、天津近期候选，并补充值得关注的全国音乐剧资源。",
+  "updatedAt": "2026-06-27 16:09",
+  "sourceNote": "基于北京、天津、长沙、桂林、呼和浩特主要剧院公开排期/购票页，以及制作方、大麦、猫眼和地方文旅公开信息整理；优先保留五个重点城市近期候选，并补充值得关注的全国音乐剧资源。",
   "items": [
     {
       "title": "长腿叔叔",
@@ -781,6 +801,33 @@
       "cities": ["上海"],
       "source": "上海西岸大剧院 2026 夏秋演出季公开剧单",
       "summary": "上海西岸大剧院公开的 2026 夏秋演出季将迭代升级版音乐剧《风声》列为重点项目，属于近期值得持续关注的高口碑国创音乐剧。",
+      "discoveredAt": "2026-06-27"
+    },
+    {
+      "title": "桂林千古情",
+      "type": "舞剧",
+      "style": ["民族", "山水", "大型歌舞"],
+      "cities": ["桂林"],
+      "source": "桂林千古情 2026 公开售票页",
+      "summary": "公开售票页显示大型歌舞《桂林千古情》2026-06-26 起仍可预订，演出以五幕串联桂林历史、民族文化和刘三姐传说。",
+      "discoveredAt": "2026-06-27"
+    },
+    {
+      "title": "印象·刘三姐",
+      "type": "舞剧",
+      "style": ["山水实景", "民族", "经典"],
+      "cities": ["桂林"],
+      "source": "中国新闻网、2026 公开售票页",
+      "summary": "中国新闻网确认该大型山水实景演出 2026 年继续运营，公开售票页显示 2026-06-26 起仍有可预订场次。",
+      "discoveredAt": "2026-06-27"
+    },
+    {
+      "title": "千古马颂",
+      "type": "舞剧",
+      "style": ["民族", "马舞", "实景"],
+      "cities": ["呼和浩特"],
+      "source": "内蒙古新闻网 2026 演出季公告",
+      "summary": "内蒙古新闻网公布大型马舞剧《千古马颂》2026 演出季为 05-01 至 10-07，共安排 160 场，是呼和浩特当前持续在演候选。",
       "discoveredAt": "2026-06-27"
     }
   ]
@@ -1046,7 +1093,8 @@
 
     const liveCityGroups = [
       "北京", "上海", "广州", "深圳", "南京", "杭州", "成都", "重庆", "武汉", "长沙",
-      "西安", "苏州", "天津", "厦门", "佛山", "郑州", "合肥", "宁波", "青岛", "昆明"
+      "西安", "苏州", "天津", "厦门", "佛山", "郑州", "合肥", "宁波", "青岛", "昆明",
+      "桂林", "呼和浩特"
     ];
 
     const state = {
@@ -1118,7 +1166,7 @@
     }
 
     function renderRegionBoard() {
-      const regions = ["北京", "天津", "长沙"];
+      const regions = ["北京", "天津", "长沙", "桂林", "呼和浩特"];
       $("regionBoard").innerHTML = regions.map((city) => {
         const list = allShows().filter((show) => show.cities.includes(city)).slice(0, 12);
         const rows = list.length ? list.map((show) => {
