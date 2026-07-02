@@ -531,6 +531,109 @@
       color: var(--accent);
     }
 
+    .commerce-note {
+      border: 1px solid #f1d38b;
+      border-radius: var(--radius);
+      background: #fff8e8;
+      padding: 12px;
+      line-height: 1.55;
+      color: #604511;
+    }
+
+    .plan-box {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+      background: #fbfcfd;
+    }
+
+    .price {
+      font-size: 38px;
+      line-height: 1;
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .price small {
+      font-size: 15px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .support-launcher {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 18;
+      box-shadow: var(--shadow);
+    }
+
+    .support-panel {
+      position: fixed;
+      right: 20px;
+      bottom: 72px;
+      width: min(390px, calc(100% - 28px));
+      max-height: min(620px, calc(100vh - 96px));
+      z-index: 19;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 20px 60px rgba(23,33,43,.18);
+      display: none;
+      overflow: hidden;
+    }
+
+    .support-panel.show { display: grid; grid-template-rows: auto 1fr auto; }
+
+    .support-messages {
+      padding: 14px;
+      overflow: auto;
+      display: grid;
+      gap: 10px;
+      background: #f7fafb;
+    }
+
+    .bubble {
+      max-width: 88%;
+      border-radius: 8px;
+      padding: 10px 11px;
+      line-height: 1.48;
+      font-size: 14px;
+    }
+
+    .bubble.bot {
+      background: white;
+      border: 1px solid var(--line);
+      justify-self: start;
+    }
+
+    .bubble.user {
+      background: var(--accent);
+      color: white;
+      justify-self: end;
+    }
+
+    .support-input {
+      border-top: 1px solid var(--line);
+      padding: 10px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      background: white;
+    }
+
+    .support-input textarea {
+      min-height: 42px;
+      max-height: 110px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 9px;
+      line-height: 1.45;
+    }
+
     @media (max-width: 940px) {
       .shell { grid-template-columns: 1fr; }
       .history-layout { grid-template-columns: 1fr; }
@@ -547,6 +650,8 @@
       .score-grid, .voice-picks { grid-template-columns: 1fr; }
       .insight-grid, .guide-steps { grid-template-columns: 1fr; }
       .material { font-size: 17px; padding: 16px; min-height: 260px; }
+      .support-launcher { right: 12px; bottom: 12px; }
+      .support-panel { right: 10px; bottom: 64px; }
     }
   </style>
 </head>
@@ -596,6 +701,10 @@
         <button class="btn ghost" id="historyBtn" type="button">
           <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15h3v3H7z"/><path d="M12 10h3v8h-3z"/><path d="M17 6h3v12h-3z"/></svg>
           历史记录
+        </button>
+        <button class="btn primary" id="subscribeBtn" type="button">
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M6 13h4"/></svg>
+          订阅 1.99/月
         </button>
       </div>
     </header>
@@ -738,6 +847,49 @@
     </section>
   </main>
   <div class="toast" id="toast"></div>
+
+  <button class="btn primary support-launcher" id="supportOpenBtn" type="button">
+    <svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg>
+    客服
+  </button>
+
+  <section class="support-panel" id="supportPanel" aria-label="客服窗口">
+    <div class="section-head">
+      <div>
+        <strong>口语陪练客服</strong>
+        <p class="tagline" id="supportStatus">自动回复中，拿不准的问题会记录给人工确认</p>
+      </div>
+      <button class="btn icon" id="supportCloseBtn" type="button" title="关闭" aria-label="关闭客服">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="support-messages" id="supportMessages"></div>
+    <div class="support-input">
+      <textarea id="supportInput" placeholder="输入订阅、录音、发音、历史记录等问题"></textarea>
+      <button class="btn primary" id="supportSendBtn" type="button">发送</button>
+    </div>
+  </section>
+
+  <div class="modal-backdrop" id="subscribeModal" role="dialog" aria-modal="true" aria-labelledby="subscribeTitle">
+    <div class="guide-modal">
+      <div class="section-head">
+        <strong id="subscribeTitle">订阅口语陪练 Pro</strong>
+        <button class="btn icon" id="closeSubscribeBtn" type="button" title="关闭" aria-label="关闭订阅">
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <div class="guide-body">
+        <div class="plan-box">
+          <div class="price">¥1.99 <small>/ 月</small></div>
+          <p style="margin:0;color:#52606d;line-height:1.6">包含雅思口语题库、英/美音朗读、录音反馈、历史记录和客服问答入口。</p>
+          <div class="commerce-note">当前 GitHub Pages 版本是商用前端演示：会记录订阅状态，但不会真实扣款。正式上线需要接入微信/支付宝/Stripe 等支付平台和服务器校验。</div>
+          <button class="btn primary" id="activateSubscriptionBtn" type="button">模拟开通订阅</button>
+          <button class="btn ghost" id="cancelSubscriptionBtn" type="button">取消本机订阅状态</button>
+          <span class="pill" id="subscriptionState">未订阅</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="modal-backdrop" id="guideModal" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
     <div class="guide-modal">
@@ -937,6 +1089,8 @@
     let timer = null;
     let currentCardIndex = 0;
     const historyKey = "ieltsSpeakingCoachHistory";
+    const subscriptionKey = "ieltsSpeakingCoachSubscription";
+    const supportKey = "ieltsSpeakingCoachSupport";
 
     function iconlessText(text) {
       return String(text).replace(/\s+/g, " ").trim();
@@ -998,6 +1152,117 @@
       toast.textContent = message;
       toast.classList.add("show");
       window.setTimeout(() => toast.classList.remove("show"), 1800);
+    }
+
+    function getSubscription() {
+      try {
+        return JSON.parse(localStorage.getItem(subscriptionKey) || "null");
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function renderSubscription() {
+      const sub = getSubscription();
+      el("subscriptionState").textContent = sub?.active ? `已订阅 · ${sub.plan}` : "未订阅";
+      el("subscribeBtn").innerHTML = sub?.active
+        ? '<svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Pro 已开通'
+        : '<svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M6 13h4"/></svg>订阅 1.99/月';
+    }
+
+    function showSubscribe() {
+      renderSubscription();
+      el("subscribeModal").classList.add("show");
+    }
+
+    function closeSubscribe() {
+      el("subscribeModal").classList.remove("show");
+    }
+
+    function activateSubscription() {
+      localStorage.setItem(subscriptionKey, JSON.stringify({
+        active: true,
+        plan: "¥1.99/月",
+        startedAt: new Date().toISOString()
+      }));
+      renderSubscription();
+      showToast("已模拟开通订阅");
+    }
+
+    function cancelSubscription() {
+      localStorage.removeItem(subscriptionKey);
+      renderSubscription();
+      showToast("已取消本机订阅状态");
+    }
+
+    function loadSupportMessages() {
+      try {
+        return JSON.parse(localStorage.getItem(supportKey) || "[]");
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveSupportMessages(messages) {
+      localStorage.setItem(supportKey, JSON.stringify(messages.slice(-80)));
+    }
+
+    function addSupportMessage(role, text) {
+      const messages = loadSupportMessages();
+      messages.push({ role, text, time: new Date().toISOString() });
+      saveSupportMessages(messages);
+      renderSupportMessages();
+    }
+
+    function renderSupportMessages() {
+      const messages = loadSupportMessages();
+      if (!messages.length) {
+        const intro = [
+          { role: "bot", text: "你好，我是口语陪练客服。可以问我订阅、录音、朗读、历史记录、发音反馈等问题。拿不准的我会标记为待人工确认。" }
+        ];
+        saveSupportMessages(intro);
+      }
+      el("supportMessages").innerHTML = loadSupportMessages().map(item => (
+        `<div class="bubble ${item.role === "user" ? "user" : "bot"}">${escapeHtml(item.text)}</div>`
+      )).join("");
+      el("supportMessages").scrollTop = el("supportMessages").scrollHeight;
+    }
+
+    function supportReply(question) {
+      const q = question.toLowerCase();
+      if (/订阅|会员|付费|1\.99|价格|收费|pro/.test(q)) {
+        return "当前订阅价展示为 ¥1.99/月。这个静态演示版会记录本机订阅状态；正式商用需要接入支付平台和服务器校验，避免用户只改浏览器数据就绕过订阅。";
+      }
+      if (/退款|取消|退订/.test(q)) {
+        return "演示版可以在订阅窗口里取消本机订阅状态。正式商用版建议设置清晰的退款规则，比如 7 天内未大量使用可退，具体规则需要你确认。";
+      }
+      if (/录音|麦克风|权限|声音/.test(q)) {
+        return "录音需要浏览器允许麦克风权限。如果没有弹窗，可以检查浏览器地址栏权限设置。录音后点击“智能分析”会生成反馈并保存到历史记录。";
+      }
+      if (/朗读|美式|英式|发音|口音/.test(q)) {
+        return "右侧可以切换美式/英式朗读。系统声音取决于用户设备和浏览器；正式版建议接入专业 TTS 服务，保证声音稳定一致。";
+      }
+      if (/历史|记录|分数|报告/.test(q)) {
+        return "右上角“历史记录”会保存每次分析结果，包括四项分数、总评和下一步训练建议。当前数据保存在本机浏览器。";
+      }
+      if (/题库|材料|雅思|part/.test(q)) {
+        return "题库目前覆盖 15 个雅思口语主题，每个主题在 Part 1、Part 2、Part 3 下至少 10 套材料，可以用“换一题”随机抽题。";
+      }
+      const pending = loadSupportMessages();
+      pending.push({ role: "bot", text: `这个问题我还不能确定，已标记为待人工确认：${question}`, time: new Date().toISOString(), pending: true });
+      saveSupportMessages(pending);
+      return "";
+    }
+
+    function sendSupportMessage() {
+      const input = el("supportInput");
+      const text = iconlessText(input.value);
+      if (!text) return;
+      addSupportMessage("user", text);
+      input.value = "";
+      const reply = supportReply(text);
+      if (reply) addSupportMessage("bot", reply);
+      renderSupportMessages();
     }
 
     function populateVoices() {
@@ -1311,6 +1576,25 @@
     el("guideBtn").addEventListener("click", showGuide);
     el("closeGuideBtn").addEventListener("click", closeGuide);
     el("startGuideBtn").addEventListener("click", closeGuide);
+    el("subscribeBtn").addEventListener("click", showSubscribe);
+    el("closeSubscribeBtn").addEventListener("click", closeSubscribe);
+    el("activateSubscriptionBtn").addEventListener("click", activateSubscription);
+    el("cancelSubscriptionBtn").addEventListener("click", cancelSubscription);
+    el("subscribeModal").addEventListener("click", (event) => {
+      if (event.target === el("subscribeModal")) closeSubscribe();
+    });
+    el("supportOpenBtn").addEventListener("click", () => {
+      el("supportPanel").classList.add("show");
+      renderSupportMessages();
+    });
+    el("supportCloseBtn").addEventListener("click", () => el("supportPanel").classList.remove("show"));
+    el("supportSendBtn").addEventListener("click", sendSupportMessage);
+    el("supportInput").addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        sendSupportMessage();
+      }
+    });
     el("guideModal").addEventListener("click", (event) => {
       if (event.target === el("guideModal")) closeGuide();
     });
@@ -1340,6 +1624,8 @@
     }
     renderPrompt();
     renderHistory();
+    renderSubscription();
+    renderSupportMessages();
     if (!localStorage.getItem("ieltsSpeakingCoachGuideSeen")) {
       window.setTimeout(showGuide, 300);
     }
