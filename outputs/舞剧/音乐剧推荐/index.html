@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <noscript><meta http-equiv="refresh" content="0; url=./theatre-guide.html"></noscript>
+  <title>舞剧音乐剧情报板</title>
+  <script>
+    const guideUrl = new URL("./theatre-guide.html", window.location.href);
+    guideUrl.searchParams.set("v", Date.now().toString());
+    window.location.replace(guideUrl);
+  </script>
+</head>
+<body>
+  <p><a href="./theatre-guide.html?v=latest">打开舞剧音乐剧情报板</a></p>
+</body>
+</html>
