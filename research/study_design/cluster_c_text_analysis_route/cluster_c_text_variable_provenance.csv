@@ -1,0 +1,21 @@
+variable_name,level,source_field_or_rule,construction_rule,validation_check,primary_analysis_use,risk_note
+text_unit_id,text_unit,platform raw id or generated hash,Concatenate source_id + raw_id; if raw_id missing hash normalized source_url + timestamp + text,Check uniqueness and nonmissing,yes,Hash collisions unlikely but should be checked
+source_id,source,source inventory,Stable id for platform-game-entry point,Must match source_inventory.csv,yes,Incorrect source mapping affects platform comparison
+platform,text_unit,source inventory,Platform name normalized to controlled vocabulary,Frequency table by platform,yes,Platform audiences differ strongly
+game_name,text_unit,source inventory or keyword,Normalize game names and aliases,Alias mapping audit,yes,Multiple games in one post may need flags
+event_window,text_unit,timestamp + event calendar,Classify as pre_event event active post_event or ordinary period,Manual check sample around boundaries,yes,Event dates must be author verified
+text_raw,text_unit,raw source,Original collected text,Nonempty check; retained only internally,no,May contain identifiers
+text_clean,text_unit,parser output,Normalize whitespace remove duplicate symbols keep semantic words,Compare sample raw vs clean,yes,Cleaning may remove meaningful emojis or slang
+user_hash,text_unit,user id if ethically allowed,Salted hash or blank if not allowed,No raw user id in analysis file,optional,User linkage may raise privacy risk
+timestamp_parsed,text_unit,raw timestamp,Parse to ISO datetime and month,Parse failure rate,yes,Time zone/platform format issues
+digital_self_extension,label,manual or model coding,1 if text expresses identity memory ownership self-extension or investment proof,Human validation precision/recall,yes,Can be confused with attachment
+emotional_value,label,manual or model coding,1 if text expresses comfort pleasure companionship aesthetic or emotional repair,Human validation precision/recall,yes,Broad label may overcapture positivity
+character_attachment,label,manual or model coding,1 if text expresses stable bond preference longing separation distress or protection for specific character,Human validation and boundary examples,yes,May overlap with emotional_value
+brand_ip_attachment,label,manual or model coding,1 if text expresses bond to game IP world or brand rather than one character,Human validation,optional,Object ambiguity
+continued_consumption,label,manual or model coding,1 if text expresses continuing play pull payment event participation retention or return,Human validation,yes,Intent and behavior must be separated
+self_reported_payment,label,manual or model coding,1 if text reports actual payment recharge monthly card pull or paid resource use,Human validation,optional,Self-report exaggeration
+community_participation,label,manual or model coding,1 if text expresses fandom community fan creation commission repost discussion or co-fan interaction,Human validation,optional,Platform-specific visibility
+commercialization_resistance,label,manual or model coding,1 if text expresses pay pressure emotional manipulation exploitative monetization or operator distrust,Human validation,yes,Negative sentiment alone is insufficient
+label_confidence_min,label,model output or coder certainty,Minimum confidence across primary labels,Distribution and threshold check,yes,Low confidence excluded from primary analysis
+needs_review,label,coding rule,TRUE if ambiguous low confidence conflicting labels or sensitive quote,Review rate and adjudication log,yes,Must not silently drop hard cases
+included_primary_analysis,analysis_sample,validation gate,TRUE if text_clean nonempty duplicate removed source allowed labels validated and not low confidence,Sample flow before/after,yes,Selection must be transparent

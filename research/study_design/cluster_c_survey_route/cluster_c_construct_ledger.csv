@@ -1,0 +1,9 @@
+construct_id,construct_name,role_in_model,working_definition,dimension_or_subconstruct,literature_anchor,example_measurement_direction,distinction_from_adjacent_construct,risk_note,next_action
+C01,数字自我延伸,exposure,玩家将虚拟角色、卡牌、账号资产、剧情记忆或收藏物视为自我表达、身份组成或个人经历延伸的程度,身份表达；记忆保存；投入证明；拥有感,Belk 1988；Belk 2013；Ahuvia 2005,我拥有或收藏的角色/卡牌能体现我是谁,不同于情绪价值；它强调“这是我的一部分”而不是“它让我开心”,可能与角色依恋高度相关,预测试后检查判别效度
+C02,虚拟物品情感价值,mediator,玩家从乙游虚拟物品和角色资产中获得的愉悦、安慰、陪伴、审美和纪念性收益,愉悦；陪伴；安慰；审美；纪念,Babin et al. 1994；Holbrook & Hirschman 1982；Brakus et al. 2009,我从收集或培养这个角色中获得情绪上的满足,不同于数字自我延伸；它强调情感收益而不是身份归属,可能与享乐价值和品牌体验重叠,用访谈确认乙游语境措辞
+C03,角色依恋,mediator_or_outcome,玩家对特定乙游角色形成的稳定情感纽带和分离不适,情感纽带；亲近感；分离不适；保护欲,Park et al. 2010；Batra et al. 2012；Labrecque 2014,如果不能继续看到或获得这个角色相关内容，我会感到失落,不同于品牌依恋；对象是具体角色而不是游戏品牌或IP,可能与拟社会关系重叠,决定是否将拟社会关系作为维度或相邻构念
+C04,品牌/IP依恋,outcome_or_parallel_mediator,玩家对游戏品牌、世界观、IP或运营方形成的情感纽带,品牌连接；IP认同；持续关注；信任,Park et al. 2010；Fournier 1998；Batra et al. 2012,即使暂时不玩，我仍会关注这个游戏或IP的新内容,不同于角色依恋；对象是品牌/IP而非单一角色,乙游中玩家可能爱角色但不爱运营方,题项需明确对象
+C05,持续消费意向,outcome,玩家未来继续游玩、继续付费或参与活动的主观意向,继续游玩；继续付费；抽卡意向；活动参与,customer engagement and brand loyalty literature,未来一个月我愿意继续为这个游戏/角色相关内容投入时间或金钱,不同于真实消费行为；是意向变量,不能等同于实际付费或留存,尽量加入行为区间题
+C06,自报消费行为,optional_outcome,玩家在指定时间窗内的自报付费、抽卡、月卡或活动消费行为,近30天付费；近3个月付费；抽卡次数；月卡/通行证,methods review recommendation,过去30天我在该游戏中的付费金额区间为,不同于持续消费意向；行为更接近商业结果,敏感题可能有缺失和低报,用区间题并允许不愿透露
+C07,社群参与,moderator_or_control,玩家参与乙游社群、二创、讨论、委托、同担互动的程度,浏览；发帖；二创；委托；同担互动,Zhou et al. 2024；Kozinets 2002,我经常在社群中浏览或讨论这个角色相关内容,不同于数字自我延伸；社群参与是环境和行为强度,可能是前因也可能是结果,模型中先作为控制或调节
+C08,商业化反感/操纵感,boundary_condition,玩家对限时活动、抽卡机制、情感话术或运营策略的压力和反感程度,付费压力；被操纵感；伦理不适；信任下降,AI companion manipulation literature；methods review issue table,我有时觉得游戏利用我对角色的感情诱导消费,不同于低情绪价值；它是负向边界条件,敏感且可能引发防御性回答,放在后段并保护匿名性
