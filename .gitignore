@@ -1,0 +1,8 @@
+node_modules/
+work/
+outputs/
+*.inspect.ndjson
+*.tmp
+~$*
+.DS_Store
+Thumbs.db
