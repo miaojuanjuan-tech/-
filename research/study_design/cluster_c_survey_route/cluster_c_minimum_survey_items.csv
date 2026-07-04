@@ -1,0 +1,29 @@
+item_id,construct_id,construct_name,item_text_cn,response_scale,reverse_coded,source_status,notes
+DS1,C01,数字自我延伸,我收藏或拥有的这个角色相关内容能体现我的个人偏好和身份,1-7 Likert 同意度,false,adapted_from_literature,需根据具体乙游措辞调整
+DS2,C01,数字自我延伸,这个角色或相关卡牌/剧情已经成为我游戏经历中很重要的一部分,1-7 Likert 同意度,false,agent_proposed,预测试检查是否与角色依恋重叠
+DS3,C01,数字自我延伸,看到这个角色相关内容时，我会想起自己投入过的时间、情绪或经历,1-7 Likert 同意度,false,agent_proposed,记忆保存维度
+DS4,C01,数字自我延伸,我会把这个角色相关的收藏视为“属于我”的重要数字资产,1-7 Likert 同意度,false,adapted_from_literature,拥有感维度
+EV1,C02,虚拟物品情感价值,收集或培养这个角色能给我带来愉悦感,1-7 Likert 同意度,false,adapted_from_literature,享乐价值
+EV2,C02,虚拟物品情感价值,这个角色相关内容能在情绪上安慰我或陪伴我,1-7 Likert 同意度,false,agent_proposed,乙游语境核心
+EV3,C02,虚拟物品情感价值,这个角色的视觉、声音、剧情或互动让我获得审美享受,1-7 Likert 同意度,false,adapted_from_literature,品牌体验/审美体验
+EV4,C02,虚拟物品情感价值,即使没有明显功能收益，我也觉得这个角色相关内容值得投入,1-7 Likert 同意度,false,agent_proposed,区分功利价值
+CA1,C03,角色依恋,我对这个角色有较强的情感连接,1-7 Likert 同意度,false,adapted_from_literature,角色依恋核心
+CA2,C03,角色依恋,如果之后很少再看到这个角色的新内容，我会感到失落,1-7 Likert 同意度,false,adapted_from_literature,分离不适
+CA3,C03,角色依恋,我会在意这个角色在剧情、活动或运营中的待遇,1-7 Likert 同意度,false,agent_proposed,乙游语境
+CA4,C03,角色依恋,相比游戏中的其他角色，这个角色对我更特别,1-7 Likert 同意度,false,agent_proposed,角色特异性
+BA1,C04,品牌/IP依恋,我对这款游戏或其IP有情感上的连接,1-7 Likert 同意度,false,adapted_from_literature,对象为游戏/IP
+BA2,C04,品牌/IP依恋,即使暂时不玩，我仍会关注这款游戏或IP的新内容,1-7 Likert 同意度,false,agent_proposed,持续关注
+BA3,C04,品牌/IP依恋,这款游戏或IP对我来说不只是普通娱乐产品,1-7 Likert 同意度,false,adapted_from_literature,品牌意义
+CI1,C05,持续消费意向,未来一个月我愿意继续游玩这款游戏,1-7 Likert 同意度,false,standard_intention_item,继续游玩
+CI2,C05,持续消费意向,未来如果有这个角色相关活动，我愿意继续参与,1-7 Likert 同意度,false,agent_proposed,角色活动参与
+CI3,C05,持续消费意向,未来如果经济条件允许，我愿意为这个角色相关内容付费,1-7 Likert 同意度,false,agent_proposed,付费意向
+CI4,C05,持续消费意向,我愿意向同好推荐这款游戏或这个角色相关内容,1-7 Likert 同意度,false,standard_loyalty_item,推荐意向
+PB1,C06,自报消费行为,过去30天你在这款游戏中的付费金额区间是,0；1-30；31-100；101-300；301-1000；1000以上；不愿透露,false,behavior_self_report,敏感题
+PB2,C06,自报消费行为,过去30天你是否为这个角色相关内容付费或消耗付费资源,是；否；不确定,false,behavior_self_report,角色相关行为
+PB3,C06,自报消费行为,过去3个月你参与过多少次这个角色相关抽卡或活动,0；1-2；3-5；6次以上；不记得,false,behavior_self_report,回忆误差
+CP1,C07,社群参与,我经常浏览这个角色或这款游戏相关的社群内容,1-7 Likert 频率,false,agent_proposed,社群暴露
+CP2,C07,社群参与,我会在社群中讨论、转发或创作这个角色相关内容,1-7 Likert 频率,false,agent_proposed,主动参与
+CP3,C07,社群参与,与其他玩家交流会增强我对这个角色的投入感,1-7 Likert 同意度,false,agent_proposed,可能中介或调节
+MR1,C08,商业化反感/操纵感,我有时觉得游戏利用我对角色的感情诱导消费,1-7 Likert 同意度,false,agent_proposed,伦理边界
+MR2,C08,商业化反感/操纵感,限时活动或抽卡机制有时会让我产生消费压力,1-7 Likert 同意度,false,agent_proposed,付费压力
+MR3,C08,商业化反感/操纵感,当角色情感内容和付费机制绑定过紧时，我会感到不适,1-7 Likert 同意度,false,agent_proposed,情感商业化反感
