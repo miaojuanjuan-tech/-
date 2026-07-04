@@ -28,6 +28,8 @@ python scripts/run_all.py
 - `output/audit/output_inventory.csv`: file inventory with SHA-256 hashes.
 - `output/tables/`: table shells for the future empirical paper.
 - `output/logs/run_all_20260704_161356.log`: run log.
+- `docs/project_memory.md`: current project memory and next-step notes.
+- `AGENTS.md`: compact project memory for future Codex/agent sessions.
 
 ## Next Data Step
 
