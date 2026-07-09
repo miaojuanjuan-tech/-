@@ -698,6 +698,10 @@
           <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 1 1 5.8 1c-.6 1.1-1.9 1.4-2.5 2.5"/><path d="M12 17h.01"/></svg>
           新手指引
         </button>
+        <button class="btn ghost" id="privacyBtn" type="button">
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+          隐私条款
+        </button>
         <button class="btn ghost" id="historyBtn" type="button">
           <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15h3v3H7z"/><path d="M12 10h3v8h-3z"/><path d="M17 6h3v12h-3z"/></svg>
           历史记录
@@ -820,6 +824,10 @@
             <svg class="icon-svg" viewBox="0 0 24 24"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
             返回练习
           </button>
+          <button class="btn ghost" id="weeklyReportBtn" type="button">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>
+            生成周报
+          </button>
           <button class="btn ghost" id="clearHistoryBtn" type="button">
             <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 16h10l1-16"/></svg>
             清空
@@ -887,6 +895,29 @@
           <button class="btn ghost" id="cancelSubscriptionBtn" type="button">取消本机订阅状态</button>
           <span class="pill" id="subscriptionState">未订阅</span>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="privacyModal" role="dialog" aria-modal="true" aria-labelledby="privacyTitle">
+    <div class="guide-modal">
+      <div class="section-head">
+        <strong id="privacyTitle">隐私与录音说明</strong>
+        <button class="btn icon" id="closePrivacyBtn" type="button" title="关闭" aria-label="关闭隐私条款">
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <div class="guide-body">
+        <div class="commerce-note">当前 GitHub Pages 演示版不会把录音上传到商家后台；录音仅用于浏览器当前会话，智能反馈主要基于页面文本和用户输入的转写内容模拟生成。</div>
+        <div class="guide-steps">
+          <div class="guide-step"><strong>录音使用</strong>只有在你点击“开始录音”并允许麦克风权限后，浏览器才会读取麦克风。</div>
+          <div class="guide-step"><strong>本地保存</strong>历史记录、订阅演示状态、客服消息保存在当前浏览器 localStorage，可由用户清空。</div>
+          <div class="guide-step"><strong>正式商用版</strong>如果未来接入 ASR、发音评分或 AI 反馈，音频可能需要上传服务器处理，必须在上传前明确告知并取得同意。</div>
+          <div class="guide-step"><strong>后台保护</strong>正式版应使用 HTTPS、权限控制、最短必要保存期限、访问日志和数据删除机制。</div>
+          <div class="guide-step"><strong>用户权利</strong>用户应能查看、导出、删除自己的练习记录，并能撤回录音处理授权。</div>
+          <div class="guide-step"><strong>人工客服</strong>拿不准的问题会标记为待人工确认，正式版应避免在客服中收集身份证、银行卡、密码等敏感信息。</div>
+        </div>
+        <button class="btn primary" id="acceptPrivacyBtn" type="button">我知道了</button>
       </div>
     </div>
   </div>
@@ -1088,7 +1119,9 @@
     let recordingStartedAt = 0;
     let timer = null;
     let currentCardIndex = 0;
+    let speakingNow = false;
     const historyKey = "ieltsSpeakingCoachHistory";
+    const weeklyReportKey = "ieltsSpeakingCoachWeeklyReports";
     const subscriptionKey = "ieltsSpeakingCoachSubscription";
     const supportKey = "ieltsSpeakingCoachSupport";
 
@@ -1291,6 +1324,21 @@
       return selection ? iconlessText(selection.toString()) : "";
     }
 
+    function setSpeechState(active) {
+      speakingNow = active;
+      el("readAllBtn").innerHTML = active
+        ? '<svg class="icon-svg" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>停止朗读'
+        : '<svg class="icon-svg" viewBox="0 0 24 24"><path d="m11 5-6 4H2v6h3l6 4V5Z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>全文朗读';
+    }
+
+    function stopSpeech() {
+      if ("speechSynthesis" in window) {
+        speechSynthesis.cancel();
+      }
+      setSpeechState(false);
+      status.textContent = "朗读已停止。";
+    }
+
     function speak(text) {
       if (!("speechSynthesis" in window)) {
         showToast("当前浏览器不支持系统朗读");
@@ -1308,6 +1356,12 @@
       utterance.lang = accent === "US" ? "en-US" : "en-GB";
       utterance.rate = Number(el("rateSelect").value);
       utterance.pitch = 1;
+      utterance.onstart = () => {
+        setSpeechState(true);
+        status.textContent = "正在朗读，可点击“停止朗读”中途停止。";
+      };
+      utterance.onend = () => setSpeechState(false);
+      utterance.onerror = () => setSpeechState(false);
       speechSynthesis.speak(utterance);
     }
 
@@ -1527,7 +1581,89 @@
       el("historySummary").innerHTML = `
         <div class="note"><strong>趋势</strong>${trend}</div>
         <div class="note"><strong>建议</strong>优先重复练最低分维度，不要每次都换新题。稳定比题量更重要。</div>
+        ${renderLatestWeeklyReport()}
       `;
+    }
+
+    function loadWeeklyReports() {
+      try {
+        return JSON.parse(localStorage.getItem(weeklyReportKey) || "[]");
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveWeeklyReports(reports) {
+      localStorage.setItem(weeklyReportKey, JSON.stringify(reports.slice(0, 30)));
+    }
+
+    function getWeekHistory() {
+      const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+      return loadHistory().filter(item => new Date(item.time).getTime() >= weekAgo);
+    }
+
+    function generateWeeklyReport(manual = true) {
+      const weekHistory = getWeekHistory();
+      if (!weekHistory.length) {
+        if (manual) showToast("最近 7 天还没有练习记录");
+        return null;
+      }
+
+      const bands = weekHistory.map(item => item.scores.band);
+      const latest = weekHistory[0];
+      const earliest = weekHistory[weekHistory.length - 1];
+      const delta = latest.scores.band - earliest.scores.band;
+      const topicCounts = weekHistory.reduce((acc, item) => {
+        acc[item.topic] = (acc[item.topic] || 0) + 1;
+        return acc;
+      }, {});
+      const topTopic = Object.entries(topicCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || "未集中";
+      const weakest = ["fluency", "pron", "lex", "grammar"].map(key => ({
+        key,
+        value: average(weekHistory.map(item => item.scores[key]))
+      })).sort((a, b) => a.value - b.value)[0];
+      const labels = { fluency: "流利度", pron: "发音", lex: "词汇", grammar: "语法" };
+      const report = {
+        id: `weekly_${Date.now()}`,
+        createdAt: new Date().toISOString(),
+        from: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+        to: new Date().toISOString(),
+        practiceCount: weekHistory.length,
+        averageBand: average(bands),
+        bestBand: Math.max(...bands),
+        delta,
+        topTopic,
+        weakest: labels[weakest.key],
+        summary: delta >= 0
+          ? `这一周整体上升 ${delta.toFixed(1)} 分，说明练习开始形成稳定积累。`
+          : `这一周最近一次比最早一次低 ${Math.abs(delta).toFixed(1)} 分，建议回到熟悉题型先稳住节奏。`,
+        next: `下周建议重点练 ${labels[weakest.key]}，围绕 ${topTopic} 做 3 次重复录音，不要每次都换新题。`
+      };
+
+      const reports = loadWeeklyReports();
+      reports.unshift(report);
+      saveWeeklyReports(reports);
+      renderHistory();
+      if (manual) showToast("周报已生成");
+      return report;
+    }
+
+    function renderLatestWeeklyReport() {
+      const latest = loadWeeklyReports()[0];
+      if (!latest) {
+        return `<div class="note"><strong>周报</strong>积累练习后可点击“生成周报”，系统也会每 7 天自动生成一次。</div>`;
+      }
+      const date = new Date(latest.createdAt).toLocaleDateString("zh-CN");
+      return `<div class="note"><strong>本周周报 · ${date}</strong>练习 ${latest.practiceCount} 次，平均 ${latest.averageBand.toFixed(1)}，最高 ${latest.bestBand.toFixed(1)}。${latest.summary} ${latest.next}</div>`;
+    }
+
+    function maybeAutoGenerateWeeklyReport() {
+      const reports = loadWeeklyReports();
+      const latest = reports[0];
+      const due = !latest || Date.now() - new Date(latest.createdAt).getTime() >= 7 * 24 * 60 * 60 * 1000;
+      if (due && getWeekHistory().length) {
+        generateWeeklyReport(false);
+      }
     }
 
     function showPractice() {
@@ -1550,6 +1686,15 @@
       localStorage.setItem("ieltsSpeakingCoachGuideSeen", "1");
     }
 
+    function showPrivacy() {
+      el("privacyModal").classList.add("show");
+    }
+
+    function closePrivacy() {
+      el("privacyModal").classList.remove("show");
+      localStorage.setItem("ieltsSpeakingCoachPrivacySeen", "1");
+    }
+
     function fillSampleTranscript() {
       transcript.value = "I would like to talk about a journey I took to a coastal city last summer. I travelled with two close friends, and the most memorable part was that we missed our train at first. Actually, it was stressful, but later we found another route and had a really pleasant conversation on the way. The trip was eye-opening because it reminded me that small problems can become part of the story.";
       showToast("已填入示例转写");
@@ -1564,18 +1709,31 @@
       currentCardIndex = 0;
       renderPrompt(0);
     });
-    el("readAllBtn").addEventListener("click", () => speak(material.textContent));
+    el("readAllBtn").addEventListener("click", () => {
+      if (speakingNow || ("speechSynthesis" in window && speechSynthesis.speaking)) {
+        stopSpeech();
+        return;
+      }
+      speak(material.textContent);
+    });
     el("readSelectionBtn").addEventListener("click", () => speak(getSelectedText()));
     el("sampleVoiceBtn").addEventListener("click", () => speak("This is a sample IELTS speaking answer in a natural pace."));
-    el("stopSpeechBtn").addEventListener("click", () => speechSynthesis.cancel());
+    el("stopSpeechBtn").addEventListener("click", stopSpeech);
     el("recordBtn").addEventListener("click", toggleRecording);
     el("analyzeBtn").addEventListener("click", estimateAnalysis);
     el("fillSampleBtn").addEventListener("click", fillSampleTranscript);
     el("historyBtn").addEventListener("click", showHistory);
     el("backToPracticeBtn").addEventListener("click", showPractice);
+    el("weeklyReportBtn").addEventListener("click", () => generateWeeklyReport(true));
     el("guideBtn").addEventListener("click", showGuide);
     el("closeGuideBtn").addEventListener("click", closeGuide);
     el("startGuideBtn").addEventListener("click", closeGuide);
+    el("privacyBtn").addEventListener("click", showPrivacy);
+    el("closePrivacyBtn").addEventListener("click", closePrivacy);
+    el("acceptPrivacyBtn").addEventListener("click", closePrivacy);
+    el("privacyModal").addEventListener("click", (event) => {
+      if (event.target === el("privacyModal")) closePrivacy();
+    });
     el("subscribeBtn").addEventListener("click", showSubscribe);
     el("closeSubscribeBtn").addEventListener("click", closeSubscribe);
     el("activateSubscriptionBtn").addEventListener("click", activateSubscription);
@@ -1624,6 +1782,7 @@
     }
     renderPrompt();
     renderHistory();
+    maybeAutoGenerateWeeklyReport();
     renderSubscription();
     renderSupportMessages();
     if (!localStorage.getItem("ieltsSpeakingCoachGuideSeen")) {
