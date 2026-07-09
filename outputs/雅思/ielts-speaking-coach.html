@@ -229,6 +229,55 @@
 
     .question-list li { margin-bottom: 9px; }
 
+    .mode-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+      padding: 13px;
+      margin-bottom: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .mode-panel.hidden { display: none; }
+
+    .mode-panel strong {
+      color: var(--accent);
+    }
+
+    .shadow-sentence {
+      border: 1px dashed #9bb8c8;
+      border-radius: var(--radius);
+      padding: 14px;
+      background: #f7fbff;
+      line-height: 1.65;
+      font-size: 18px;
+    }
+
+    .exam-timer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: #fbfcfd;
+    }
+
+    .timer-face {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--accent-2);
+      line-height: 1;
+    }
+
+    .mode-active {
+      background: var(--ink);
+      color: white;
+      border-color: var(--ink);
+    }
+
     .practice-dock {
       margin-top: 14px;
       display: grid;
@@ -717,6 +766,9 @@
       <div class="panel">
         <div class="toolbar">
           <div class="controls">
+            <button class="btn ghost mode-active" id="guidedModeBtn" type="button">示范练习</button>
+            <button class="btn ghost" id="shadowModeBtn" type="button">影子跟读</button>
+            <button class="btn ghost" id="examModeBtn" type="button">自由口语考试</button>
             <button class="btn ghost" id="readAllBtn" type="button">
               <svg class="icon-svg" viewBox="0 0 24 24"><path d="m11 5-6 4H2v6h3l6 4V5Z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
               全文朗读
@@ -739,9 +791,41 @@
           <div class="prompt-meta">
             <span class="pill" id="partPill">IELTS Speaking Part 2</span>
             <span class="pill" id="topicPill">Topic: Travel</span>
-            <span class="pill">建议回答 90 秒</span>
+            <span class="pill" id="modePill">模式：示范练习</span>
+            <span class="pill" id="timePill">建议回答 90 秒</span>
           </div>
           <article id="material" class="material" tabindex="0"></article>
+
+          <div class="mode-panel hidden" id="shadowPanel">
+            <strong>影子跟读</strong>
+            <div class="shadow-sentence" id="shadowSentence">选择影子跟读模式后，这里会显示示范回答的单句。</div>
+            <div class="controls">
+              <button class="btn ghost" id="prevShadowBtn" type="button">上一句</button>
+              <button class="btn primary" id="playShadowBtn" type="button">
+                <svg class="icon-svg" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                听这一句
+              </button>
+              <button class="btn ghost" id="nextShadowBtn" type="button">下一句</button>
+              <button class="btn warn" id="shadowRecordBtn" type="button">跟读录音</button>
+            </div>
+            <p class="status" id="shadowProgress">第 1 / 1 句。听一句，停顿 2 秒，模仿重音、连读和语调再录音。</p>
+          </div>
+
+          <div class="mode-panel hidden" id="examPanel">
+            <strong>自由口语考试模式</strong>
+            <div class="exam-timer">
+              <div>
+                <div class="timer-face" id="examTimer">00:00</div>
+                <div class="status" id="examTimerLabel">未开始</div>
+              </div>
+              <div class="controls">
+                <button class="btn ghost" id="prepTimerBtn" type="button">备考 60 秒</button>
+                <button class="btn warn" id="answerTimerBtn" type="button">答题 120 秒</button>
+                <button class="btn ghost" id="resetExamBtn" type="button">重置</button>
+              </div>
+            </div>
+            <p class="status">考试模式会隐藏示范回答。你只看题目临场发挥，录音后可在右侧粘贴转写文本或接入真实 ASR 后分析。</p>
+          </div>
 
           <div class="practice-dock" id="practiceDock">
             <div class="wave" aria-hidden="true" id="wave">
@@ -933,11 +1017,12 @@
       <div class="guide-body">
         <div class="guide-steps">
           <div class="guide-step"><strong>1. 选题练习</strong>选择 Part 和 Topic，点击“换一题”随机抽取雅思口语材料。</div>
-          <div class="guide-step"><strong>2. 听标准朗读</strong>切换美式或英式声音，可全文朗读，也可以选中文字只朗读某一句。</div>
-          <div class="guide-step"><strong>3. 开始录音</strong>点击“开始录音”，按材料或示范回答朗读；浏览器会请求麦克风权限。</div>
-          <div class="guide-step"><strong>4. 智能反馈</strong>点击“智能分析”查看流利度、发音、词汇、语法、改进动作和下一次训练重点。</div>
-          <div class="guide-step"><strong>5. 查看历史</strong>右上角“历史记录”会保存每次分析结果，方便观察进步趋势。</div>
-          <div class="guide-step"><strong>6. 正式接入</strong>当前是前端原型，后续可接入真实 ASR、发音评分和大模型反馈。</div>
+          <div class="guide-step"><strong>2. 选择模式</strong>示范练习适合学习答案结构，影子跟读适合模仿发音，自由口语考试适合临场发挥。</div>
+          <div class="guide-step"><strong>3. 听标准朗读</strong>切换美式或英式声音，可全文朗读，也可以选中文字只朗读某一句。</div>
+          <div class="guide-step"><strong>4. 开始录音</strong>点击“开始录音”，示范练习可照读，考试模式需要只看题目自己说。</div>
+          <div class="guide-step"><strong>5. 智能反馈</strong>点击“智能分析”查看流利度、发音、词汇、语法、改进动作和下一次训练重点。</div>
+          <div class="guide-step"><strong>6. 查看历史</strong>右上角“历史记录”会保存每次分析结果，方便观察进步趋势。</div>
+          <div class="guide-step"><strong>7. 正式接入</strong>当前是前端原型，后续可接入真实 ASR、发音评分和大模型反馈。</div>
         </div>
         <button class="btn primary" id="startGuideBtn" type="button">开始使用</button>
       </div>
@@ -1120,6 +1205,10 @@
     let timer = null;
     let currentCardIndex = 0;
     let speakingNow = false;
+    let practiceMode = "guided";
+    let shadowIndex = 0;
+    let examTimer = null;
+    let examRemaining = 0;
     const historyKey = "ieltsSpeakingCoachHistory";
     const weeklyReportKey = "ieltsSpeakingCoachWeeklyReports";
     const subscriptionKey = "ieltsSpeakingCoachSubscription";
@@ -1139,6 +1228,20 @@
       }[char]));
     }
 
+    function getCurrentCard() {
+      const topic = el("topicSelect").value;
+      const part = el("partSelect").value;
+      return prompts[topic][part][currentCardIndex];
+    }
+
+    function splitSentences(text) {
+      return String(text)
+        .replace(/\s+/g, " ")
+        .match(/[^.!?]+[.!?]+|[^.!?]+$/g)
+        ?.map(sentence => sentence.trim())
+        .filter(Boolean) || [];
+    }
+
     function renderPrompt(index = currentCardIndex) {
       const topic = el("topicSelect").value;
       const part = el("partSelect").value;
@@ -1151,19 +1254,27 @@
       const cues = item.cues.length
         ? `<h3>Cue card</h3><ul class="cue-list">${item.cues.map(cue => `<li>${escapeHtml(cue)}</li>`).join("")}</ul>`
         : "";
+      const sample = practiceMode === "exam"
+        ? `<div class="sample-answer"><h3>Exam mode</h3><p>示范回答已隐藏。请像真实雅思口语一样，只根据题目和提示临场组织答案。</p></div>`
+        : `<div class="sample-answer">
+          <h3>Sample answer</h3>
+          <p>${escapeHtml(item.answer)}</p>
+        </div>`;
       material.innerHTML = `
         <h2>${escapeHtml(item.title)}</h2>
         ${questions}
         ${cues}
-        <div class="sample-answer">
-          <h3>Sample answer</h3>
-          <p>${escapeHtml(item.answer)}</p>
-        </div>
+        ${sample}
       `;
       el("partPill").textContent = partNames[part];
       el("topicPill").textContent = `Topic: ${topicNames[topic]} · ${currentCardIndex + 1}/${cards.length}`;
+      el("modePill").textContent = `模式：${practiceMode === "guided" ? "示范练习" : practiceMode === "shadow" ? "影子跟读" : "自由口语考试"}`;
+      el("timePill").textContent = practiceMode === "exam" ? "真实考试计时" : "建议回答 90 秒";
       transcript.value = "";
-      status.textContent = "已生成新的练习材料，包含题目和示范回答。选中文字后可点击“朗读选中”。";
+      renderModePanels();
+      status.textContent = practiceMode === "exam"
+        ? "考试模式已开启：示范回答隐藏，请先备考再录音作答。"
+        : "已生成新的练习材料，包含题目和示范回答。选中文字后可点击“朗读选中”。";
     }
 
     function renderRandomPrompt() {
@@ -1179,6 +1290,89 @@
         nextIndex = Math.floor(Math.random() * cards.length);
       }
       renderPrompt(nextIndex);
+    }
+
+    function setPracticeMode(mode) {
+      practiceMode = mode;
+      shadowIndex = 0;
+      resetExamTimer();
+      stopSpeech();
+      ["guidedModeBtn", "shadowModeBtn", "examModeBtn"].forEach((id) => el(id).classList.remove("mode-active"));
+      const activeId = mode === "guided" ? "guidedModeBtn" : mode === "shadow" ? "shadowModeBtn" : "examModeBtn";
+      el(activeId).classList.add("mode-active");
+      renderPrompt(currentCardIndex);
+    }
+
+    function renderModePanels() {
+      el("shadowPanel").classList.toggle("hidden", practiceMode !== "shadow");
+      el("examPanel").classList.toggle("hidden", practiceMode !== "exam");
+      if (practiceMode === "shadow") renderShadowSentence();
+    }
+
+    function renderShadowSentence() {
+      const sentences = splitSentences(getCurrentCard().answer);
+      if (!sentences.length) {
+        el("shadowSentence").textContent = "当前材料没有可跟读的句子。";
+        el("shadowProgress").textContent = "第 0 / 0 句";
+        return;
+      }
+      shadowIndex = Math.max(0, Math.min(shadowIndex, sentences.length - 1));
+      el("shadowSentence").textContent = sentences[shadowIndex];
+      el("shadowProgress").textContent = `第 ${shadowIndex + 1} / ${sentences.length} 句。先听，再模仿发音、重音、停顿和语调。`;
+    }
+
+    function playShadowSentence() {
+      const sentence = el("shadowSentence").textContent;
+      speak(sentence);
+    }
+
+    function getReadAllText() {
+      const card = getCurrentCard();
+      if (practiceMode === "exam") {
+        const promptsText = card.questions.length ? card.questions.join(" ") : card.cues.join(" ");
+        return `${card.title}. ${promptsText}`;
+      }
+      return material.textContent;
+    }
+
+    function moveShadow(step) {
+      const sentences = splitSentences(getCurrentCard().answer);
+      if (!sentences.length) return;
+      shadowIndex = (shadowIndex + step + sentences.length) % sentences.length;
+      renderShadowSentence();
+    }
+
+    function formatTime(totalSeconds) {
+      const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+      const seconds = String(totalSeconds % 60).padStart(2, "0");
+      return `${minutes}:${seconds}`;
+    }
+
+    function startExamTimer(seconds, label) {
+      clearInterval(examTimer);
+      examRemaining = seconds;
+      el("examTimerLabel").textContent = label;
+      el("examTimer").textContent = formatTime(examRemaining);
+      examTimer = setInterval(() => {
+        examRemaining -= 1;
+        el("examTimer").textContent = formatTime(Math.max(0, examRemaining));
+        if (examRemaining <= 0) {
+          clearInterval(examTimer);
+          examTimer = null;
+          el("examTimerLabel").textContent = `${label}结束`;
+          showToast(`${label}结束`);
+        }
+      }, 1000);
+    }
+
+    function resetExamTimer() {
+      clearInterval(examTimer);
+      examTimer = null;
+      examRemaining = 0;
+      const timerEl = document.getElementById("examTimer");
+      const labelEl = document.getElementById("examTimerLabel");
+      if (timerEl) timerEl.textContent = "00:00";
+      if (labelEl) labelEl.textContent = "未开始";
     }
 
     function showToast(message) {
@@ -1709,16 +1903,26 @@
       currentCardIndex = 0;
       renderPrompt(0);
     });
+    el("guidedModeBtn").addEventListener("click", () => setPracticeMode("guided"));
+    el("shadowModeBtn").addEventListener("click", () => setPracticeMode("shadow"));
+    el("examModeBtn").addEventListener("click", () => setPracticeMode("exam"));
     el("readAllBtn").addEventListener("click", () => {
       if (speakingNow || ("speechSynthesis" in window && speechSynthesis.speaking)) {
         stopSpeech();
         return;
       }
-      speak(material.textContent);
+      speak(getReadAllText());
     });
     el("readSelectionBtn").addEventListener("click", () => speak(getSelectedText()));
     el("sampleVoiceBtn").addEventListener("click", () => speak("This is a sample IELTS speaking answer in a natural pace."));
     el("stopSpeechBtn").addEventListener("click", stopSpeech);
+    el("prevShadowBtn").addEventListener("click", () => moveShadow(-1));
+    el("playShadowBtn").addEventListener("click", playShadowSentence);
+    el("nextShadowBtn").addEventListener("click", () => moveShadow(1));
+    el("shadowRecordBtn").addEventListener("click", toggleRecording);
+    el("prepTimerBtn").addEventListener("click", () => startExamTimer(60, "备考"));
+    el("answerTimerBtn").addEventListener("click", () => startExamTimer(120, "答题"));
+    el("resetExamBtn").addEventListener("click", resetExamTimer);
     el("recordBtn").addEventListener("click", toggleRecording);
     el("analyzeBtn").addEventListener("click", estimateAnalysis);
     el("fillSampleBtn").addEventListener("click", fillSampleTranscript);
